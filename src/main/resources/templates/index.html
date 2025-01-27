@@ -19,21 +19,21 @@
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-31</h2>
             <ul class="mt-2 text-gray-500">
-                <li>김윤호 ❤️ 장한별: 드레스 투어</li>
+                <li>신랑1 / 신부1: 드레스 투어</li>
             </ul>
         </div>
 
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-14</h2>
             <ul class="mt-2 text-gray-500">
-                <li>김윤호 ❤️ 장한별: 촬영 가봉</li>
+                <li>신랑1 / 신부1: 촬영 가봉</li>
             </ul>
         </div>
 
         <div>
             <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-2</h2>
             <ul class="mt-2 text-gray-500">
-                <li>김윤호 ❤️ 장한별: 본식</li>
+                <li>신랑1 / 신부1: 본식</li>
             </ul>
         </div>
     </div>
@@ -67,7 +67,7 @@
                 <!-- Table Body -->
                 <tbody class="overflow-y-scroll">
                 <tr class="hover:bg-gray-800 transition" style="height: 48px;">
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">김윤호 ❤️ 장한별</td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">신랑1 / 신부1</td>
                     <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
                         D-20
                         <div class="absolute bottom-1 left-1 flex space-x-1">
@@ -182,26 +182,76 @@
         </button>
 
         <!-- 제목 -->
-        <h2 class="text-lg font-bold text-center">김윤호 ❤️ 장한별</h2>
+        <h2 class="text-lg font-bold text-center">신랑1 / 신부1</h2>
         <h2 class="text-lg font-bold mb-4 text-center">드레스투어</h2>
+
+        <!-- 상단 구분선 -->
+        <hr class="border-gray-600 my-4">
 
         <!-- 체크박스 -->
         <div class="space-y-4">
+            <div class="block text-base font-semibold mb-4">안내 여부</div>
             <label class="flex">
                 <span class="text-base flex-1 ml-16">D-31</span>
-                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+                <input type="checkbox" id="checkboxD31" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
             </label>
             <label class="flex">
                 <span class="text-base flex-1 ml-16">D-14</span>
-                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+                <input type="checkbox" id="checkboxD14" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
             </label>
             <label class="flex">
                 <span class="text-base flex-1 ml-16">D-2</span>
-                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+                <input type="checkbox" id="checkboxD2" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
             </label>
+        </div>
+
+        <!-- 하단 구분선 -->
+        <hr class="border-gray-600 my-4">
+
+        <!-- Select Box -->
+        <div class="mt-4">
+            <label for="orderStatus" class="block text-base font-semibold mb-4">발주 상태</label>
+            <select id="orderStatus" class="w-full bg-gray-700 text-white p-2 rounded" disabled>
+                <option value="pending">발주대기</option>
+                <option value="completed">발주완료</option>
+                <option value="second_pending">2차발주 대기</option>
+                <option value="second_completed">2차발주 완료</option>
+            </select>
+        </div>
+
+        <!-- 수정 버튼 -->
+        <div class="mt-6 text-center">
+            <button id="editButton" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                수정 시작
+            </button>
+            <!-- 말풍선 -->
+            <div id="tooltip" class="absolute bg-gray-700 text-white text-sm px-3 py-2 rounded shadow-lg mt-2 hidden transition-opacity duration-500 opacity-0"
+                 style="right: -50px;">
+                팝업 종료하시면 자동 저장됩니다.
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // 수정 버튼 클릭 이벤트
+    document.getElementById('editButton').addEventListener('click', () => {
+        // 체크박스 활성화
+        document.getElementById('checkboxD31').disabled = false;
+        document.getElementById('checkboxD14').disabled = false;
+        document.getElementById('checkboxD2').disabled = false;
+
+        // 셀렉트 박스 활성화
+        document.getElementById('orderStatus').disabled = false;
+
+        // 수정 버튼을 비활성화
+        document.getElementById('editButton').disabled = true;
+
+        // 버튼 텍스트 변경
+        document.getElementById('editButton').textContent = '수정 중';
+    });
+</script>
+
 
 <!-- Row Template -->
 <template id="processTemplate">
@@ -299,6 +349,37 @@
         if (!popupContent.contains(e.target)) {
             popupCheckbox.classList.add('hidden');
         }
+    });
+
+    const editButton = document.getElementById('editButton');
+    const tooltip = document.getElementById('tooltip');
+
+    // 수정 버튼 클릭 이벤트
+    editButton.addEventListener('click', () => {
+        // 체크박스 활성화
+        document.getElementById('checkboxD31').disabled = false;
+        document.getElementById('checkboxD14').disabled = false;
+        document.getElementById('checkboxD2').disabled = false;
+
+        // 셀렉트 박스 활성화
+        document.getElementById('orderStatus').disabled = false;
+
+        // 수정 버튼 비활성화
+        editButton.disabled = true;
+
+        // 버튼 텍스트 변경
+        editButton.textContent = '수정 중';
+
+        // 말풍선 표시
+        tooltip.classList.remove('hidden');
+        tooltip.classList.add('opacity-100');
+
+        // 말풍선을 3초 뒤에 서서히 숨김
+        setTimeout(() => {
+            tooltip.classList.remove('opacity-100');
+            tooltip.classList.add('opacity-0');
+            setTimeout(() => tooltip.classList.add('hidden'), 500); // 숨김 후 완전히 제거
+        }, 1000);
     });
 </script>
 </body>
