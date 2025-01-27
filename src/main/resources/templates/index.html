@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웨딩 캘린더</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .font-custom {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-300 font-custom h-screen">
+<div class="flex h-full">
+    <!-- Sidebar -->
+    <div class="flex-2 p-6 bg-gray-900 border-r border-gray-800 h-full">
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-31</h2>
+            <ul class="mt-2 text-gray-500">
+                <li>김윤호 ❤️ 장한별: 드레스 투어</li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-14</h2>
+            <ul class="mt-2 text-gray-500">
+                <li>김윤호 ❤️ 장한별: 촬영 가봉</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-2</h2>
+            <ul class="mt-2 text-gray-500">
+                <li>김윤호 ❤️ 장한별: 본식</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 h-full">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-bold text-gray-100">웨딩 캘린더</h1>
+            <button id="openPopup" class="bg-gray-800 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-lg">
+                +
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="w-full border border-gray-800 bg-gray-900">
+            <table class="w-full table-fixed border-collapse">
+                <!-- Table Header -->
+                <thead class="bg-gray-900">
+                <tr>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">고객명</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">드레스 투어</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">촬영 가봉</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">리허설 촬영</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">본식 가봉</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">본식</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">R</th>
+                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">W</th>
+                </tr>
+                </thead>
+
+                <!-- Table Body -->
+                <tbody class="overflow-y-scroll">
+                <tr class="hover:bg-gray-800 transition" style="height: 48px;">
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">김윤호 ❤️ 장한별</td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
+                        D-20
+                        <div class="absolute bottom-1 left-1 flex space-x-1">
+                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                        </div>
+                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                    </td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
+                        D-15
+                        <div class="absolute bottom-1 left-1 flex space-x-1">
+                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                        </div>
+                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                    </td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
+                        D-10
+                        <div class="absolute bottom-1 left-1 flex space-x-1">
+                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                        </div>
+                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                    </td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
+                        D-5
+                        <div class="absolute bottom-1 left-1 flex space-x-1">
+                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                        </div>
+                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                    </td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
+                        D-0
+                        <div class="absolute bottom-1 left-1 flex space-x-1">
+                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                        </div>
+                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                    </td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">R 내용</td>
+                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">W 내용</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Popup -->
+<div id="popup" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden">
+    <div class="bg-gray-800 rounded-lg shadow-lg p-6 w-1/2 text-white">
+        <!-- Close Button -->
+        <button id="closePopup" class="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl font-bold">
+            ×
+        </button>
+
+        <!-- 신랑/신부 이름 입력 -->
+        <h2 class="text-xl font-bold mb-4">일정 관리</h2>
+        <div class="flex gap-4 mb-6">
+            <input id="groomName" type="text" placeholder="신랑 이름" class="w-full bg-gray-700 text-white p-2 rounded">
+            <input id="brideName" type="text" placeholder="신부 이름" class="w-full bg-gray-700 text-white p-2 rounded">
+        </div>
+
+        <!-- 프로세스 추가 영역 -->
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold">일정 설정</h3>
+            <button id="add" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-4 rounded">
+                +
+            </button>
+        </div>
+
+        <!-- 표 -->
+        <table class="w-full text-sm text-gray-300 bg-gray-900 rounded-lg overflow-hidden">
+            <thead class="bg-gray-700">
+            <tr>
+                <th class="p-4 text-left w-1/2">일정</th>
+                <th class="p-4 text-left w-1/2">날짜</th>
+                <th class="p-4 text-center w-20">작업</th>
+            </tr>
+            </thead>
+            <tbody id="processList">
+            <!-- Dynamic Rows Will Be Added Here -->
+            </tbody>
+        </table>
+
+        <!-- 저장/취소 버튼 -->
+        <div class="flex justify-end gap-4 mt-4">
+            <button id="save" class="bg-slate-500 hover:bg-slate-400 text-white font-bold py-2 px-4 rounded">
+                저장
+            </button>
+            <button id="cancel" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+                취소
+            </button>
+            <button id="delete" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
+                삭제
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="popupCheckbox" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center">
+    <div id="popupContent" class="bg-gray-800 rounded-lg shadow-lg p-4 max-w-[300px] w-full h-auto text-white relative">
+        <!-- Close Button -->
+        <button id="closeCheckboxPopup" class="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl font-bold">
+<!--            ×-->
+        </button>
+
+        <!-- 제목 -->
+        <h2 class="text-lg font-bold text-center">김윤호 ❤️ 장한별</h2>
+        <h2 class="text-lg font-bold mb-4 text-center">드레스투어</h2>
+
+        <!-- 체크박스 -->
+        <div class="space-y-4">
+            <label class="flex">
+                <span class="text-base flex-1 ml-16">D-31</span>
+                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+            </label>
+            <label class="flex">
+                <span class="text-base flex-1 ml-16">D-14</span>
+                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+            </label>
+            <label class="flex">
+                <span class="text-base flex-1 ml-16">D-2</span>
+                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16">
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Row Template -->
+<template id="processTemplate">
+    <tr>
+        <td class="p-4">
+            <select class="w-full bg-gray-700 text-white p-2 rounded">
+                <option disabled selected>일정 선택</option>
+                <option value="드레스 투어">드레스 투어</option>
+                <option value="촬영 가봉">촬영 가봉</option>
+                <option value="리허설 촬영">리허설 촬영</option>
+                <option value="본식 가봉">본식 가봉</option>
+                <option value="본식">본식</option>
+            </select>
+        </td>
+        <td class="p-4">
+            <input type="date" class="w-full bg-gray-700 text-white p-2 rounded">
+        </td>
+        <td class="p-4 text-center">
+            <button class="removeRow bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded">
+                -
+            </button>
+        </td>
+    </tr>
+</template>
+
+<script>
+    const openPopup = document.getElementById('openPopup');
+    const closePopup = document.getElementById('closePopup');
+    const popup = document.getElementById('popup');
+    const addProcess = document.getElementById('add');
+    const processList = document.getElementById('processList');
+    const processTemplate = document.getElementById('processTemplate');
+    const saveProcess = document.getElementById('save');
+    const cancelProcess = document.getElementById('cancel');
+
+    // Open popup
+    openPopup.addEventListener('click', () => {
+        resetPopup();
+        popup.classList.remove('hidden');
+    });
+
+    // Close popup
+    closePopup.addEventListener('click', () => {
+        popup.classList.add('hidden');
+    });
+
+    // Add process row
+    addProcess.addEventListener('click', () => {
+        addProcessRow();
+    });
+
+    // Add a new row
+    const addProcessRow = () => {
+        const clone = processTemplate.content.cloneNode(true);
+        const removeButton = clone.querySelector('.removeRow');
+        removeButton.addEventListener('click', (e) => {
+            e.target.closest('tr').remove();
+        });
+        processList.appendChild(clone);
+    };
+
+    // Reset popup (clear inputs and add a default row)
+    const resetPopup = () => {
+        document.getElementById('groomName').value = '';
+        document.getElementById('brideName').value = '';
+        processList.innerHTML = ''; // Clear all rows
+        addProcessRow(); // Add a default row
+    };
+
+    // Save button action
+    saveProcess.addEventListener('click', () => {
+        alert('저장되었습니다.');
+        popup.classList.add('hidden');
+    });
+
+    // Cancel button action
+    cancelProcess.addEventListener('click', () => {
+        if (confirm('취소하시겠습니까?')) {
+            popup.classList.add('hidden');
+        }
+
+    });
+
+    const closeCheckboxPopup = document.getElementById('closeCheckboxPopup');
+    const popupCheckbox = document.getElementById('popupCheckbox');
+    const popupContent = document.getElementById('popupContent');
+
+    // Close the popup when the close button is clicked
+    closeCheckboxPopup.addEventListener('click', () => {
+        popupCheckbox.classList.add('hidden');
+    });
+
+    // Close the popup when clicking outside of the popup content
+    popupCheckbox.addEventListener('click', (e) => {
+        if (!popupContent.contains(e.target)) {
+            popupCheckbox.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>
