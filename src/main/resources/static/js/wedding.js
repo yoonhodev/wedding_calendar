@@ -1,0 +1,5 @@
+const getCustomerList = () => {
+
+    fetch('/customer')
+
+}
