@@ -6,13 +6,13 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "wedding")
+@Table(name = "dress_tour")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WeddingEntity {
+public class DressTourEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +34,6 @@ public class WeddingEntity {
     @Column(name = "guide_2days", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer guide2Days;
 
-    @Column(name = "order_status")
-    private String orderStatus;
-
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private String createdAt;
 
@@ -49,4 +46,3 @@ public class WeddingEntity {
         this.updatedAt = java.time.LocalDateTime.now().toString();
     }
 }
-
