@@ -4,21 +4,6 @@ document.addEventListener("DOMContentLoaded" ,async function () {
     await fetchCustomerList();
 })
 
-const fetchCustomerList = async () => {
-    try {
-        const response = await fetch('/customer');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        createCalendar(data.data);
-
-    } catch (error) {
-        console.error('Error fetching customer data:', error);
-    }
-};
-
 const openModal = document.getElementById('openModal');
 const closeModal = document.querySelectorAll('.close');
 const writeModal = document.getElementById('writeModal');
@@ -188,6 +173,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+const fetchCustomerList = async () => {
+    try {
+        const response = await fetch('/customer');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        createCalendar(data.data);
+        createGuideList(data.data);
+
+    } catch (error) {
+        console.error('Error fetching customer data:', error);
+    }
+};
+
 const createCalendar = (data) => {
 
     console.log('data :', data);
@@ -279,4 +280,68 @@ const formatDate = (date) => {
     if (!date || date === 'N/A') return 'N/A';
     const d = new Date(date);
     return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
+};
+
+const createGuideList = (data) => {
+    const dDayList = document.getElementById('dDayList');
+    const d31 = document.getElementById(('D-31'));
+    const d14 = document.getElementById('D-14');
+    const d2 = document.getElementById('D-2');
+
+    // D-Day 항목 초기화
+    const dDayStructure = {
+        'D-31': [],
+        'D-14': [],
+        'D-2': []
+    };
+
+    // 데이터 매핑
+    data.forEach(item => {
+        item.events.forEach(event => {
+            const dDay = calculateDDay(event.dDay); // D-Day 계산
+            console.log('dDay :', dDay);
+
+            if (dDayStructure[dDay] !== undefined) {
+                dDayStructure[dDay].push(`${item.husbandName} / ${item.wifeName} - ${event.eventType}`);
+            }
+        });
+    });
+
+    // D-Day 리스트 생성
+    let dDayHtml = `
+        <ul class="space-y-4">
+            <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
+                D-31
+                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+            </li>
+            ${dDayStructure['D-31'].length > 0
+        ? dDayStructure['D-31'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
+        : ''}
+
+            <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
+                D-14
+                <span class="w-2 h-2 bg-yellow-300 rounded-full"></span>
+            </li>
+            ${dDayStructure['D-14'].length > 0
+        ? dDayStructure['D-14'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
+        : ''}
+
+            <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
+                D-2
+                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+            </li>
+            ${dDayStructure['D-2'].length > 0
+        ? dDayStructure['D-2'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
+        : ''}
+        </ul>
+    `;
+
+    // 리스트 삽입
+    dDayList.innerHTML = dDayHtml;
+
+
+    // count 삽입
+    d31.innerHTML = dDayStructure['D-31'].length;
+    d14.innerHTML = dDayStructure['D-14'].length;
+    d2.innerHTML = dDayStructure['D-2'].length;
 };
