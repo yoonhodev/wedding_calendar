@@ -11,4 +11,10 @@ public class WeddingController {
 
         return "index";
     }
+
+    @GetMapping("/test123")
+    public String test() {
+
+        return "test";
+    }
 }

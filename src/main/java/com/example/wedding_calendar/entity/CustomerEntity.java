@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -33,6 +34,9 @@ public class CustomerEntity {
 
     @Column(name = "makeup_wedding")
     private String makeupWedding;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<EventEntity> events;
 
     @Column(name = "created_at", columnDefinition = "TEXT")
     private String createdAt;

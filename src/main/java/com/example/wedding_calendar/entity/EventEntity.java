@@ -25,7 +25,7 @@ public class EventEntity {
     private String eventType;
 
     @Column(name = "d_day", nullable = false)
-    private LocalDate dDay;
+    private String dDay;
 
     @Column(name = "guide_31days", columnDefinition = "INTEGER DEFAULT 0")
     private Integer guide31Days;
