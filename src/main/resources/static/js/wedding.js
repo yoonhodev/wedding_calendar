@@ -24,6 +24,7 @@ testModal.addEventListener('click', () => {
 closeModal.forEach((button) => {
     button.addEventListener('click', () => {
         document.getElementById('writeModal').close();
+        document.getElementById('updateModal').close();
     });
 });
 
@@ -203,20 +204,25 @@ const createCalendar = (data) => {
         html += `
         <tr class="border-b border-slate-200">
             <td class="text-center whitespace-nowrap">${customer.husbandName} / ${customer.wifeName}</td>
-            ${createTdColumns(customer.events)}
+            ${createTdColumns(customer)}
         </tr>
         `;
     }
     calendarList.innerHTML = html;
 };
 
-const createTdColumns = (events) => {
+const createTdColumns = (customer) => {
+
+    const events = customer.events
+    console.log('customer :', customer);
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
 
     for (let type of eventTypes) {
         const targetEvent = events.find(event => event.eventType === type);
         const orderStatus = targetEvent ? targetEvent.orderStatus || '상태 없음' : '미등록';
+        const newOrderStatus = transformOrderStatus(orderStatus);
+        const deactivateClass = newOrderStatus.includes('대기') ? 'text-gray-400' : 'text-blue-400';
         const dDay = targetEvent ? targetEvent.dDay || 'N/A' : 'N/A';
 
         // D-Day 계산
@@ -227,10 +233,10 @@ const createTdColumns = (events) => {
 
         // TD 클래스에 조건부 스타일 추가
         tdHtml += `
-            <td class="p-4 text-center text-sm relative ${isPast ? 'bg-gray-100 text-gray-300' : ''}">
+            <td class="p-4 text-center text-sm relative ${isPast ? 'bg-gray-100 text-gray-300' : ''}" onclick="openUpdatePopup('${encodeURIComponent(JSON.stringify(customer))}','${type}')">
                 ${targetEvent ? `${dDayText}` : 'N/A'}
-                <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
-                    ${orderStatus}
+                <div class="absolute bottom-3 left-1 text-[10px] ${deactivateClass}">
+                    ${newOrderStatus}
                 </div>
                 <div class="absolute bottom-1 left-1 flex space-x-1">
                     <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
@@ -254,6 +260,23 @@ const createTdColumns = (events) => {
 
     return tdHtml;
 };
+
+const transformOrderStatus = (status) => {
+
+    switch (status) {
+
+        case 'orderWait':
+            return '발주 대기';
+        case 'orderComplete':
+            return '발주 완료';
+        case 'secondOrderWait':
+            return '2차 발주 대기';
+        case 'secondOrderComplete':
+            return '2차 발주 완료';
+        default:
+            return '';
+    }
+}
 
 const calculateDDay = (date) => {
     const targetDate = new Date(date);
@@ -344,4 +367,41 @@ const createGuideList = (data) => {
     d31.innerHTML = dDayStructure['D-31'].length;
     d14.innerHTML = dDayStructure['D-14'].length;
     d2.innerHTML = dDayStructure['D-2'].length;
+};
+
+const openUpdatePopup = (encodedCustomer, eventType) => {
+    const updateModalTitle = document.querySelector('#updateModal h3');
+    const orderStatus = document.getElementById('orderStatus');
+    const customer = JSON.parse(decodeURIComponent(encodedCustomer));
+    console.log('Customer Data:', customer);
+
+    // 선택한 이벤트 타입에 따라 이벤트 찾기
+    const targetEvent = customer.events.find(event => event.eventType === eventType);
+
+    console.log('targetEvent :', targetEvent);
+
+    // 제목 업데이트
+    updateModalTitle.textContent = `${customer.husbandName} / ${customer.wifeName} ${eventType}`;
+
+    // 체크박스 요소 가져오기
+    const d31Checkbox = document.getElementById('checkboxD31');
+    const d14Checkbox = document.getElementById('checkboxD14');
+    const d2Checkbox = document.getElementById('checkboxD2');
+
+    // 해당 이벤트가 있으면 값 설정, 없으면 false
+    d31Checkbox.checked = targetEvent ? targetEvent.guide31Days === 1 : false;
+    d14Checkbox.checked = targetEvent ? targetEvent.guide14Days === 1 : false;
+    d2Checkbox.checked = targetEvent ? targetEvent.guide2Days === 1 : false;
+
+    // 발주 상태 select box 설정
+    const orderStatusSelect = document.getElementById('orderStatus');
+    if (targetEvent) {
+        orderStatusSelect.value = targetEvent.orderStatus || '';
+    } else {
+        orderStatusSelect.value = ''; // 기본값 설정
+    }
+
+    // 팝업 열기
+    const modal = document.getElementById('updateModal');
+    modal.showModal();
 };

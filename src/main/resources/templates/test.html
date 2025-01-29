@@ -328,28 +328,6 @@
     <div class="modal-box bg-white rounded-lg shadow-lg p-6 w-96 max-w-md">
         <h3 class="text-base sm:text-lg font-medium mb-4 sm:mb-5">신랑1 / 신부1 드레스투어</h3>
 
-        <!-- 신랑/신부 이름 -->
-        <div class="flex gap-4 mb-4">
-            <label class="block w-1/2">
-                <div class="pb-1 text-sm">신랑 이름</div>
-                <input
-                        type="text"
-                        placeholder="신랑 이름"
-                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
-                        disabled
-                />
-            </label>
-            <label class="block w-1/2">
-                <div class="pb-1 text-sm">신부 이름</div>
-                <input
-                        type="text"
-                        placeholder="신부 이름"
-                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
-                        disabled
-                />
-            </label>
-        </div>
-
         <!-- 안내 여부 -->
         <div class="mb-6">
             <h4 class="text-sm font-semibold mb-2">안내 여부</h4>
@@ -372,11 +350,12 @@
         <!-- 발주 여부 -->
         <div class="mb-6">
             <h4 class="text-sm font-semibold mb-2">발주 여부</h4>
-            <select class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200" disabled>
+            <select id="orderStatus" class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200" disabled>
                 <option value="" disabled selected>선택하세요</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="orderWait">발주 대기</option>
+                <option value="orderComplete">발주 완료</option>
+                <option value="secondOrderWait">2차 발주 대기</option>
+                <option value="secondOrderComplete">2차 발주 완료</option>
             </select>
         </div>
 
@@ -391,6 +370,7 @@
         </div>
     </div>
 </dialog>
+
 </body>
 <script th:src="@{/js/wedding.js}"></script>
 </html>
