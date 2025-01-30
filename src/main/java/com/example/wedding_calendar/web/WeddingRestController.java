@@ -4,6 +4,7 @@ import com.example.wedding_calendar.dto.CustomerWithEventsDto;
 import com.example.wedding_calendar.service.CustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,6 +29,10 @@ public class WeddingRestController {
                 "success", true,
                 "data", customerList
         )));
+    }
+
+    @PostMapping("/customer")
+    public void saveCustomer() {
 
     }
 }

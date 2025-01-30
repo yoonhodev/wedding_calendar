@@ -80,10 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         selectBox.innerHTML = `
                 <option value="" disabled selected>항목 선택</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
+                <option value="dressTour">드레스투어</option>
+                <option value="suitRehearsal">촬영 가봉</option>
+                <option value="takeRehearsal">리허설 촬영</option>
+                <option value="suitWedding">본식 가봉</option>
+                <option value="wedding">본식</option>
             `;
 
         // 날짜 선택
@@ -405,3 +406,12 @@ const openUpdatePopup = (encodedCustomer, eventType) => {
     const modal = document.getElementById('updateModal');
     modal.showModal();
 };
+
+const saveCustomerInfo = async () => {
+
+    try {
+        const response = await fetch('/customer')
+    } catch (error) {
+        console.error(error);
+    }
+}
