@@ -12,9 +12,15 @@ public class WeddingController {
         return "index";
     }
 
-    @GetMapping("/test123")
+    @GetMapping("/test")
     public String test() {
 
         return "test";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+
+        return "login";
     }
 }
