@@ -1,3 +1,9 @@
+const getCsrfToken = async () => {
+    const response = await fetch("/csrf-token");
+    const data = await response.json();
+    return data.csrfToken;
+};
+
 document.addEventListener("DOMContentLoaded" ,async function () {
 
     console.log('wedding.js start');
@@ -80,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         selectBox.innerHTML = `
                 <option value="" disabled selected>항목 선택</option>
-                <option value="dressTour">드레스투어</option>
-                <option value="suitRehearsal">촬영 가봉</option>
-                <option value="takeRehearsal">리허설 촬영</option>
-                <option value="suitWedding">본식 가봉</option>
-                <option value="wedding">본식</option>
+                <option value="드레스 투어">드레스 투어</option>
+                <option value="촬영 가봉">촬영 가봉</option>
+                <option value="리허설 촬영">리허설 촬영</option>
+                <option value="본식 가봉">본식 가봉</option>
+                <option value="본식">본식</option>
             `;
 
         // 날짜 선택
@@ -215,7 +221,6 @@ const createCalendar = (data) => {
 const createTdColumns = (customer) => {
 
     const events = customer.events
-    console.log('customer :', customer);
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
 
@@ -409,8 +414,49 @@ const openUpdatePopup = (encodedCustomer, eventType) => {
 
 const saveCustomerInfo = async () => {
 
+    const csrfToken = await getCsrfToken(); // CSRF 토큰 가져오기
+
+    const userId = 'admin';
+    const husbandName = document.getElementById('husbandName').value;
+    const wifeName = document.getElementById('wifeName').value;
+
+    const events = [];
+    document.querySelectorAll('.dynamic-row').forEach(row => {
+        const eventType = row.querySelector('select').value;
+        const eventDate = row.querySelector('input').value;
+        if(eventType && eventDate) {
+            events.push({
+                eventType,
+                eventDate
+            });
+        }
+    });
+
+    const params = {
+        userId,
+        husbandName,
+        wifeName,
+        events
+    }
+
+    console.log('events :', events);
+
     try {
-        const response = await fetch('/customer')
+        const response = await fetch('/customer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "X-CSRF-TOKEN": csrfToken // CSRF 토큰 추가
+            },
+            body: JSON.stringify(params)
+        });
+
+        if(!response.ok) {
+            throw new Error(`HTTP ERROR STATUS : ${response.status}`);
+        }
+
+        console.log('register success');
+        alert('회원 등록이 완료되었습니다.')
     } catch (error) {
         console.error(error);
     }

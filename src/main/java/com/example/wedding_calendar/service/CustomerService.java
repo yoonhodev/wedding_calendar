@@ -1,8 +1,11 @@
 package com.example.wedding_calendar.service;
 
-import com.example.wedding_calendar.dto.CustomerWithEventsDto;
-import com.example.wedding_calendar.dto.EventDto;
+import com.example.wedding_calendar.dto.*;
+import com.example.wedding_calendar.entity.Customer;
+import com.example.wedding_calendar.entity.Event;
+import com.example.wedding_calendar.entity.User;
 import com.example.wedding_calendar.repository.CustomerRepository;
+import com.example.wedding_calendar.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final EventRepository eventRepository;
 
     public List<CustomerWithEventsDto> getAllCustomersWithEvents() {
         return customerRepository.findAll().stream().map(customer ->
@@ -33,5 +37,49 @@ public class CustomerService {
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public CustomerResponseDto saveCustomer(CustomerRequestDto requestDto,  User user) {
+        Customer customer = Customer.builder()
+                .userId(user.getId())
+                .husbandName(requestDto.getHusbandName())
+                .wifeName(requestDto.getWifeName())
+                .build();
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        List<Event> events = requestDto.getEvents().stream()
+                .map(EventDto -> Event.builder()
+                        .customer(savedCustomer)
+                        .eventType(EventDto.getEventType())
+                        .dDay(EventDto.getEventDate())
+                        .build())
+                .toList();
+
+        eventRepository.saveAll(events);
+        savedCustomer.setEvents(events);
+
+        return convertToResponseDto(savedCustomer);
+    }
+
+    private CustomerResponseDto convertToResponseDto(Customer customer) {
+        List<EventResponseDto> eventDtos = customer.getEvents().stream()
+                .map(event -> EventResponseDto.builder()
+                        .idx(event.getIdx())
+                        .eventType(event.getEventType())
+                        .dDay(event.getDDay().toString())
+                        .guide31Days(event.getGuide31Days())
+                        .guide14Days(event.getGuide14Days())
+                        .guide2Days(event.getGuide2Days())
+                        .orderStatus(event.getOrderStatus())
+                        .build())
+                .collect(Collectors.toList());
+
+        return CustomerResponseDto.builder()
+                .customerId(customer.getIdx())
+                .husbandName(customer.getHusbandName())
+                .wifeName(customer.getWifeName())
+                .events(eventDtos)
+                .build();
     }
 }

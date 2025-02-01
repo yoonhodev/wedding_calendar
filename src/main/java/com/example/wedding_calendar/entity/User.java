@@ -5,38 +5,35 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerEntity {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    @Column(name = "id", unique = true, nullable = false)
+    private String id;
 
-    @Column(name = "husband_name")
-    private String husbandName;
+    @Column(name = "pw")
+    private String pw;
 
-    @Column(name = "wife_name")
-    private String wifeName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "makeup_rehearsal")
-    private String makeupRehearsal;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "makeup_wedding")
-    private String makeupWedding;
+    @Column(name = "provider")
+    private String provider;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EventEntity> events;
+    @Column(name = "provider_id")
+    private String providerId;
 
     @Column(name = "created_at", columnDefinition = "TEXT")
     private String createdAt;

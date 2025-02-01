@@ -3,8 +3,6 @@ package com.example.wedding_calendar.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "events")
 @Getter
@@ -12,14 +10,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventEntity {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
     @ManyToOne
     @JoinColumn(name = "customer_idx", nullable = false)
-    private CustomerEntity customer;
+    private Customer customer;
 
     @Column(name = "event_type", nullable = false)
     private String eventType;
