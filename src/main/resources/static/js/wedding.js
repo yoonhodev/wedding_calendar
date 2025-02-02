@@ -245,9 +245,9 @@ const createTdColumns = (customer) => {
                     ${newOrderStatus}
                 </div>
                 <div class="absolute bottom-1 left-1 flex space-x-1">
-                    <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                    <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                    <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                    <span class="w-2 h-2 bg-orange-300 rounded-sm"></span>
+                    <span class="w-2 h-2 bg-yellow-300 rounded-sm"></span>
+                    <span class="w-2 h-2 bg-green-300 rounded-sm"></span>
                 </div>
                 <div class="absolute bottom-1 right-1 text-xs text-gray-400">${formatDate(dDay)}</div>
             </td>
@@ -312,6 +312,7 @@ const formatDate = (date) => {
 };
 
 const createGuideList = (data) => {
+    console.log('data :', data);
     const dDayList = document.getElementById('dDayList');
     const d31 = document.getElementById(('D-31'));
     const d14 = document.getElementById('D-14');
@@ -328,46 +329,52 @@ const createGuideList = (data) => {
     data.forEach(item => {
         item.events.forEach(event => {
             const dDay = calculateDDay(event.dDay); // D-Day 계산
-            console.log('dDay :', dDay);
 
             if (dDayStructure[dDay] !== undefined) {
-                dDayStructure[dDay].push(`${item.husbandName} / ${item.wifeName} - ${event.eventType}`);
+                dDayStructure[dDay].push({
+                    name: `${item.husbandName} / ${item.wifeName} - ${event.eventType}`,
+                    guide31Days: event.guide31Days,
+                    guide14Days: event.guide14Days,
+                    guide2Days: event.guide2Days
+                })
             }
         });
     });
 
-    // D-Day 리스트 생성
-    let dDayHtml = `
+    // 리스트 삽입
+    dDayList.innerHTML = `
         <ul class="space-y-4">
+            <!-- D-31 -->
             <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
                 D-31
-                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                <span class="w-2 h-2 bg-orange-300 rounded-sm"></span>
             </li>
-            ${dDayStructure['D-31'].length > 0
-        ? dDayStructure['D-31'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
-        : ''}
+            ${dDayStructure['D-31'].map(item => {
+        const class31 = item.guide31Days === 1 ? 'line-through text-gray-300' : '';
+        return `<li class="${class31} text-left ml-4">${item.name}</li>`;
+    }).join('')}
 
+            <!-- D-14 -->
             <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
                 D-14
-                <span class="w-2 h-2 bg-yellow-300 rounded-full"></span>
+                <span class="w-2 h-2 bg-yellow-300 rounded-sm"></span>
             </li>
-            ${dDayStructure['D-14'].length > 0
-        ? dDayStructure['D-14'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
-        : ''}
+            ${dDayStructure['D-14'].map(item => {
+        const class14 = item.guide14Days === 1 ? 'line-through text-gray-300' : '';
+        return `<li class="${class14} text-left ml-4">${item.name}</li>`;
+    }).join('')}
 
+            <!-- D-2 -->
             <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">
                 D-2
-                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                <span class="w-2 h-2 bg-green-300 rounded-sm"></span>
             </li>
-            ${dDayStructure['D-2'].length > 0
-        ? dDayStructure['D-2'].map(name => `<li class="text-gray-500 text-left ml-4">${name}</li>`).join('')
-        : ''}
+            ${dDayStructure['D-2'].map(item => {
+        const class2 = item.guide2Days === 1 ? 'line-through text-gray-300' : '';
+        return `<li class="${class2} text-left ml-4">${item.name}</li>`;
+    }).join('')}
         </ul>
     `;
-
-    // 리스트 삽입
-    dDayList.innerHTML = dDayHtml;
-
 
     // count 삽입
     d31.innerHTML = dDayStructure['D-31'].length;
