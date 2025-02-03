@@ -18,7 +18,7 @@ public class WeddingController {
         return "test";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/auth/login")
     public String login() {
 
         return "login";

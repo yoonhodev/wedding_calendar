@@ -12,5 +12,7 @@ public class CustomerWithEventsDto {
     private Long customerId;
     private String husbandName;
     private String wifeName;
+    private String makeupRehearsal;
+    private String makeupWedding;
     private List<EventDto> events;
 }

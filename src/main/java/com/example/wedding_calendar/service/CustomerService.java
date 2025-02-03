@@ -24,6 +24,8 @@ public class CustomerService {
                         customer.getIdx(),
                         customer.getHusbandName(),
                         customer.getWifeName(),
+                        customer.getMakeupRehearsal(),
+                        customer.getMakeupWedding(),
                         customer.getEvents().stream()
                                 .map(event -> new EventDto(
                                         event.getIdx(),

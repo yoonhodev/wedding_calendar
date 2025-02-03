@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: wedding-calendar
+
+  datasource:
+    url: jdbc:sqlite:/Users/yoonhodev/Documents/dev/db/wedding.db
+    driver-class-name: org.sqlite.JDBC
+    username: ""
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: com.example.wedding_calendar.config.SQLiteDialect
+
+  security:
+    user:
+      name: admin
+      password: 1234
+
+jwt:
+  secret: "jwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwt"
+  expiration: 115200000

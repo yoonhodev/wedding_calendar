@@ -182,8 +182,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const fetchCustomerList = async () => {
+    const token = localStorage.getItem('token');
     try {
-        const response = await fetch('/customer');
+        const response = await fetch('/api/customer', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -198,7 +205,6 @@ const fetchCustomerList = async () => {
 };
 
 const createCalendar = (data) => {
-
     console.log('data :', data);
     const calendarList = document.getElementById('calendarList');
     if (!calendarList) {
@@ -207,20 +213,30 @@ const createCalendar = (data) => {
     }
 
     let html = '';
+
     for (let customer of data) {
         html += `
-        <tr class="border-b border-slate-200">
-            <td class="text-center whitespace-nowrap">${customer.husbandName} / ${customer.wifeName}</td>
-            ${createTdColumns(customer)}
-        </tr>
+            <tr class="border-b border-slate-200">
+                <td class="text-center w-[10%] whitespace-nowrap overflow-hidden truncate">
+                    ${customer.husbandName} / ${customer.wifeName}
+                </td>
+                ${createTdColumns(customer)}
+            </tr>
         `;
     }
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
     calendarList.innerHTML = html;
 };
 
 const createTdColumns = (customer) => {
+    console.log('customer :', customer);
 
-    const events = customer.events
+    const events = customer.events;
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
 
@@ -239,33 +255,41 @@ const createTdColumns = (customer) => {
 
         // TD 클래스에 조건부 스타일 추가
         tdHtml += `
-            <td class="p-4 text-center text-sm relative ${isPast ? 'bg-gray-100 text-gray-300' : ''}" onclick="openUpdatePopup('${encodeURIComponent(JSON.stringify(customer))}','${type}')">
+            <td class="p-4 text-center text-sm relative cursor-pointer w-[15%] truncate whitespace-nowrap overflow-hidden ${isPast ? 'bg-gray-100 text-gray-300' : ''}" onclick="openUpdatePopup('${encodeURIComponent(JSON.stringify(customer))}','${type}')">
                 ${targetEvent ? `${dDayText}` : 'N/A'}
                 <div class="absolute bottom-3 left-1 text-[10px] ${deactivateClass}">
                     ${newOrderStatus}
                 </div>
                 <div class="absolute bottom-1 left-1 flex space-x-1">
-                    <span class="w-2 h-2 bg-orange-300 rounded-sm"></span>
-                    <span class="w-2 h-2 bg-yellow-300 rounded-sm"></span>
-                    <span class="w-2 h-2 bg-green-300 rounded-sm"></span>
+                    <span class="w-2 h-2 bg-orange-300 rounded-md"></span>
+                    <span class="w-2 h-2 bg-yellow-300 rounded-md"></span>
+                    <span class="w-2 h-2 bg-green-300 rounded-md"></span>
                 </div>
                 <div class="absolute bottom-1 right-1 text-xs text-gray-400">${formatDate(dDay)}</div>
             </td>
         `;
     }
 
+    const makeupRehearsal = `${customer.makeupRehearsal}` ? `${customer.makeupRehearsal}` : '';
+    const makeupWedding = `${customer.makeupWedding}` ? `${customer.makeupWedding}` : '';
+
     // 추가 열 생성
     tdHtml += `
-        <td class="p-4 text-center text-sm relative">
-            test
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden">
+            <span class="block truncate max-w-[250px]">
+                ${makeupRehearsal}
+            </span>
         </td>
-        <td class="p-4 text-center text-sm relative">
-            test
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden">
+            <span class="block truncate max-w-[250px]">
+                ${makeupWedding}
+            </span>
         </td>
     `;
 
     return tdHtml;
 };
+
 
 const transformOrderStatus = (status) => {
 
@@ -449,7 +473,7 @@ const saveCustomerInfo = async () => {
     console.log('events :', events);
 
     try {
-        const response = await fetch('/customer', {
+        const response = await fetch('/api/customer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -461,10 +485,9 @@ const saveCustomerInfo = async () => {
         if(!response.ok) {
             throw new Error(`HTTP ERROR STATUS : ${response.status}`);
         }
-
-        console.log('register success');
-        alert('회원 등록이 완료되었습니다.')
     } catch (error) {
         console.error(error);
+    } finally {
+        location.reload();
     }
 }
