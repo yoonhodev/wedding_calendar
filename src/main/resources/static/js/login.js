@@ -21,7 +21,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         console.log("JWT 토큰:", data.token);
 
         localStorage.setItem("token", data.token);
-        window.location.href = "/test";
+        window.location.href = "/";
     } catch (error) {
         console.error("로그인 오류:", error);
         console.log("JWT 토큰:", data.token);

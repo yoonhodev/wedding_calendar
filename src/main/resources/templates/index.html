@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>웨딩 캘린더</title>
+    <title>일정 관리</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -12,378 +12,382 @@
         }
     </style>
 </head>
-<body class="bg-black text-gray-300 font-custom h-screen">
+<body class="bg-gray-100 text-gray-700 font-custom h-screen">
+<!-- Container -->
 <div class="flex h-full">
     <!-- Sidebar -->
-    <div class="flex-2 p-6 bg-gray-900 border-r border-gray-800 h-full">
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-31</h2>
-            <ul class="mt-2 text-gray-500">
-                <li>신랑1 / 신부1: 드레스 투어</li>
-            </ul>
-        </div>
-
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-14</h2>
-            <ul class="mt-2 text-gray-500">
-                <li>신랑1 / 신부1: 촬영 가봉</li>
-            </ul>
-        </div>
-
-        <div>
-            <h2 class="text-lg font-semibold text-gray-400 border-b border-gray-800 pb-2">D-2</h2>
-            <ul class="mt-2 text-gray-500">
-                <li>신랑1 / 신부1: 본식</li>
-            </ul>
+    <div class="w-64 bg-white shadow-lg border-r border-gray-200 h-full rounded-r-lg">
+        <div class="p-6">
+            <div class="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r to-[#1261a6] from-[#21a3dc] mb-8">
+                <span class="block">calendar</span>
+                <span class="block">for wedding</span>
+            </div>
+            <div id="dDayList">
+                <ul class="space-y-4">
+                    <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">D-31
+                        <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                    </li>
+                    <li class="text-gray-500 text-left ml-4">신랑1 / 신부1</li>
+                    <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">D-14
+                        <span class="w-2 h-2 bg-yellow-300 rounded-full"></span>
+                    </li>
+                    <li class="text-gray-500 text-left ml-4">신랑2 / 신부2</li>
+                    <li class="flex items-center justify-between px-2 sm:px-3 py-1 rounded-md bg-[#f3f7fc] border-r-4 border-[#b6cee1] text-[#476c8a]">D-2
+                        <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                    </li>
+                    <li class="text-gray-500 text-left ml-4">신랑3 / 신부3</li>
+                </ul>
+            </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-6 h-full">
+    <div class="flex-1 p-8">
+        <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-xl font-bold text-gray-100">웨딩 캘린더</h1>
-            <button id="openPopup" class="bg-gray-800 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-lg">
-                +
-            </button>
+            <div></div> <!-- Left Space -->
+            <div class="flex items-center gap-4">
+                <span class="font-medium tracking-wide text-xs sm:text-sm text-slate-600">장한별</span>
+                <button id="testModal" class="bg-slate-400 px-3 py-1 text-xs sm:text-sm text-white rounded-full border-2 border-slate-300 shadow-sm hover:bg-slate-500">
+                    Logout
+                </button>
+            </div>
         </div>
 
-        <!-- Table -->
-        <div class="w-full border border-gray-800 bg-gray-900">
-            <table class="w-full table-fixed border-collapse">
-                <!-- Table Header -->
-                <thead class="bg-gray-900">
-                <tr>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">고객명</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">드레스 투어</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">촬영 가봉</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">리허설 촬영</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">본식 가봉</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">본식</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">R</th>
-                    <th class="border border-gray-800 p-4 text-center text-sm text-gray-400">W</th>
-                </tr>
-                </thead>
+        <!-- Main Card -->
+        <div class="bg-white p-6 rounded-lg shadow-lg h-full">
+            <!-- Title and Filters -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-base sm:text-lg text-gray-600 font-semibold">일정 관리</h1>
+                <div class="flex items-center justify-end gap-y-1 gap-x-1 sm:gap-x-2 text-[0.6rem] sm:text-xs flex-wrap">
+                    <button class="whitespace-nowrap bg-orange-100 rounded-full pl-2 pr-1 h-6 sm:pl-3 sm:pr-2 sm:h-7 text-orange-700 font-medium flex items-center justify-end gap-1">
+                        D-31
+                        <span id="D-31" class="text-[0.65rem] bg-orange-500 ml-0.5 rounded-full w-4 h-4 sm:w-5 sm:h-5 text-white flex items-center justify-center font-light">1</span>
+                    </button>
+                    <button class="whitespace-nowrap bg-yellow-100 rounded-full pl-2 pr-1 h-6 sm:pl-3 sm:pr-2 sm:h-7 text-yellow-700 font-medium flex items-center justify-end gap-1">
+                        D-14
+                        <span id="D-14" class="text-[0.65rem] bg-yellow-500 ml-0.5 rounded-full w-4 h-4 sm:w-5 sm:h-5 text-white flex items-center justify-center font-light">1</span>
+                    </button>
+                    <button class="whitespace-nowrap bg-green-100 rounded-full pl-2 pr-1 h-6 sm:pl-3 sm:pr-2 sm:h-7 text-green-700 font-medium flex items-center justify-end gap-1">
+                        D-2
+                        <span id="D-2" class="text-[0.65rem] bg-green-500 ml-0.5 rounded-full w-4 h-4 sm:w-5 sm:h-5 text-white flex items-center justify-center font-light">1</span>
+                    </button>
+                    <button id="openModal" class="text-[0.65rem] bg-gray-500 ml-0.5 rounded-full w-4 h-4 sm:w-5 sm:h-5 text-white flex items-center justify-center font-light">+</button>
+                </div>
+            </div>
 
-                <!-- Table Body -->
-                <tbody class="overflow-y-scroll">
-                <tr class="hover:bg-gray-800 transition" style="height: 48px;">
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">신랑1 / 신부1</td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
-                        D-20
-                        <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
-                            2차 발주 완료
-                        </div>
-                        <div class="absolute bottom-1 left-1 flex space-x-1">
-                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
-                        </div>
-                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
-                    </td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
-                        D-15
-                        <div class="absolute bottom-1 left-1 flex space-x-1">
-                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
-                        </div>
-                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
-                    </td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
-                        D-10
-                        <div class="absolute bottom-1 left-1 flex space-x-1">
-                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
-                        </div>
-                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
-                    </td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
-                        D-5
-                        <div class="absolute bottom-1 left-1 flex space-x-1">
-                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
-                        </div>
-                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
-                    </td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300 relative">
-                        D-0
-                        <div class="absolute bottom-1 left-1 flex space-x-1">
-                            <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
-                            <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
-                            <span class="w-2 h-2 bg-green-300 rounded-full"></span>
-                        </div>
-                        <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
-                    </td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">R 내용</td>
-                    <td class="border border-gray-800 p-4 text-center text-sm text-gray-300">W 내용</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Popup -->
-<div id="popup" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden">
-    <div class="bg-gray-800 rounded-lg shadow-lg p-6 w-1/2 text-white">
-        <!-- Close Button -->
-        <button id="closePopup" class="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl font-bold">
-            ×
-        </button>
-
-        <!-- 신랑/신부 이름 입력 -->
-        <h2 class="text-xl font-bold mb-4">일정 관리</h2>
-        <div class="flex gap-4 mb-6">
-            <input id="groomName" type="text" placeholder="신랑 이름" class="w-full bg-gray-700 text-white p-2 rounded">
-            <input id="brideName" type="text" placeholder="신부 이름" class="w-full bg-gray-700 text-white p-2 rounded">
-        </div>
-
-        <!-- 프로세스 추가 영역 -->
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold">일정 설정</h3>
-            <button id="add" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-4 rounded">
-                +
-            </button>
-        </div>
-
-        <!-- 표 -->
-        <table class="w-full text-sm text-gray-300 bg-gray-900 rounded-lg overflow-hidden">
-            <thead class="bg-gray-700">
-            <tr>
-                <th class="p-4 text-left w-1/2">일정</th>
-                <th class="p-4 text-left w-1/2">날짜</th>
-                <th class="p-4 text-center w-20">작업</th>
-            </tr>
-            </thead>
-            <tbody id="processList">
-            <!-- Dynamic Rows Will Be Added Here -->
-            </tbody>
-        </table>
-
-        <!-- 저장/취소 버튼 -->
-        <div class="flex justify-end gap-4 mt-4">
-            <button id="save" class="bg-slate-500 hover:bg-slate-400 text-white font-bold py-2 px-4 rounded">
-                저장
-            </button>
-            <button id="cancel" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
-                취소
-            </button>
-            <button id="delete" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
-                삭제
-            </button>
-        </div>
-    </div>
-</div>
-
-<div id="popupCheckbox" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center">
-    <div id="popupContent" class="bg-gray-800 rounded-lg shadow-lg p-4 max-w-[300px] w-full h-auto text-white relative">
-        <!-- Close Button -->
-        <button id="closeCheckboxPopup" class="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl font-bold">
-<!--            ×-->
-        </button>
-
-        <!-- 제목 -->
-        <h2 class="text-lg font-bold text-center">신랑1 / 신부1</h2>
-        <h2 class="text-lg font-bold mb-4 text-center">드레스투어</h2>
-
-        <!-- 상단 구분선 -->
-        <hr class="border-gray-600 my-4">
-
-        <!-- 체크박스 -->
-        <div class="space-y-4">
-            <div class="block text-base font-semibold mb-4">안내 여부</div>
-            <label class="flex">
-                <span class="text-base flex-1 ml-16">D-31</span>
-                <input type="checkbox" id="checkboxD31" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
-            </label>
-            <label class="flex">
-                <span class="text-base flex-1 ml-16">D-14</span>
-                <input type="checkbox" id="checkboxD14" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
-            </label>
-            <label class="flex">
-                <span class="text-base flex-1 ml-16">D-2</span>
-                <input type="checkbox" id="checkboxD2" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-700 rounded mr-16" disabled>
-            </label>
-        </div>
-
-        <!-- 하단 구분선 -->
-        <hr class="border-gray-600 my-4">
-
-        <!-- Select Box -->
-        <div class="mt-4">
-            <label for="orderStatus" class="block text-base font-semibold mb-4">발주 상태</label>
-            <select id="orderStatus" class="w-full bg-gray-700 text-white p-2 rounded" disabled>
-                <option value="pending">발주대기</option>
-                <option value="completed">발주완료</option>
-                <option value="second_pending">2차발주 대기</option>
-                <option value="second_completed">2차발주 완료</option>
-            </select>
-        </div>
-
-        <!-- 수정 버튼 -->
-        <div class="mt-6 text-center">
-            <button id="editButton" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
-                수정 시작
-            </button>
-            <!-- 말풍선 -->
-            <div id="tooltip" class="absolute bg-gray-700 text-white text-sm px-3 py-2 rounded shadow-lg mt-2 hidden transition-opacity duration-500 opacity-0"
-                 style="right: -50px;">
-                팝업 종료하시면 자동 저장됩니다.
+            <!-- Table -->
+            <div>
+                <table class="bg-white table-card w-full border-slate-200 h-full">
+                    <thead class="sticky top-0">
+                    <tr class="text-xs text-slate-600 bg-slate-200 shadow-inner">
+                        <th class="py-3 whitespace-nowrap">고객명</th>
+                        <th class="py-3 whitespace-nowrap">드레스 투어</th>
+                        <th class="py-3 whitespace-nowrap">촬영 가봉</th>
+                        <th class="py-3 whitespace-nowrap">리허설 촬영</th>
+                        <th class="py-3 whitespace-nowrap">본식 가봉</th>
+                        <th class="py-3 whitespace-nowrap">본식</th>
+                        <th class="py-3 whitespace-nowrap">R</th>
+                        <th class="py-3 whitespace-nowrap">W</th>
+                    </tr>
+                    </thead>
+                    <tbody id="calendarList" class="text-xs">
+                    <tr class="border-b border-slate-200">
+                        <td class="text-center whitespace-nowrap">신랑1 / 신부1</td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-slate-200">
+                        <td class="text-center whitespace-nowrap">신랑1 / 신부1</td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <td class="p-4 text-center text-sm relative">
+                            D-20
+                            <div class="absolute bottom-3 left-1 text-[10px] text-blue-400">
+                                2차 발주 완료
+                            </div>
+                            <div class="absolute bottom-1 left-1 flex space-x-1">
+                                <span class="w-2 h-2 bg-orange-300 rounded-full"></span>
+                                <span class="w-2 h-2 bg-yellow-200 rounded-full"></span>
+                                <span class="w-2 h-2 bg-green-300 rounded-full"></span>
+                            </div>
+                            <div class="absolute bottom-1 right-1 text-xs text-gray-400">25. 1. 26</div>
+                        </td>
+                        <!--                        <td class="border border-gray-200 p-4 text-center text-sm">-->
+                        <!--                            <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg">+</button>-->
+                        <!--                        </td>-->
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    // 수정 버튼 클릭 이벤트
-    document.getElementById('editButton').addEventListener('click', () => {
-        // 체크박스 활성화
-        document.getElementById('checkboxD31').disabled = false;
-        document.getElementById('checkboxD14').disabled = false;
-        document.getElementById('checkboxD2').disabled = false;
+<dialog id="writeModal" class="modal rounded-lg">
+    <div class="modal-box bg-white rounded-lg shadow-lg p-6 w-96 max-w-md">
+        <h3 class="text-base sm:text-lg font-medium mb-4 sm:mb-5">일정 관리</h3>
 
-        // 셀렉트 박스 활성화
-        document.getElementById('orderStatus').disabled = false;
+        <!-- 신랑/신부 이름 -->
+        <div class="flex gap-4 mb-4">
+            <label class="block w-1/2">
+                <div class="pb-1 text-sm">신랑 이름</div>
+                <input
+                        type="text"
+                        id="husbandName"
+                        placeholder="신랑 이름"
+                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
+                />
+            </label>
+            <label class="block w-1/2">
+                <div class="pb-1 text-sm">신부 이름</div>
+                <input
+                        type="text"
+                        id="wifeName"
+                        placeholder="신부 이름"
+                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
+                />
+            </label>
+        </div>
 
-        // 수정 버튼을 비활성화
-        document.getElementById('editButton').disabled = true;
-
-        // 버튼 텍스트 변경
-        document.getElementById('editButton').textContent = '수정 중';
-    });
-</script>
-
-
-<!-- Row Template -->
-<template id="processTemplate">
-    <tr>
-        <td class="p-4">
-            <select class="w-full bg-gray-700 text-white p-2 rounded">
-                <option disabled selected>일정 선택</option>
-                <option value="드레스 투어">드레스 투어</option>
-                <option value="촬영 가봉">촬영 가봉</option>
-                <option value="리허설 촬영">리허설 촬영</option>
-                <option value="본식 가봉">본식 가봉</option>
-                <option value="본식">본식</option>
-            </select>
-        </td>
-        <td class="p-4">
-            <input type="date" class="w-full bg-gray-700 text-white p-2 rounded">
-        </td>
-        <td class="p-4 text-center">
-            <button class="removeRow bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded">
-                -
+        <!-- + 버튼 -->
+        <div class="flex justify-end mb-6">
+            <button id="addRowBtn" class="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-400 text-xs">
+                일정 추가
             </button>
-        </td>
-    </tr>
-</template>
+        </div>
 
-<script>
-    const openPopup = document.getElementById('openPopup');
-    const closePopup = document.getElementById('closePopup');
-    const popup = document.getElementById('popup');
-    const addProcess = document.getElementById('add');
-    const processList = document.getElementById('processList');
-    const processTemplate = document.getElementById('processTemplate');
-    const saveProcess = document.getElementById('save');
-    const cancelProcess = document.getElementById('cancel');
+        <!-- 항목 및 날짜 추가 -->
+        <div id="dynamicFields" class="space-y-4">
+            <!-- Dynamic rows will be added here -->
+        </div>
 
-    // Open popup
-    openPopup.addEventListener('click', () => {
-        resetPopup();
-        popup.classList.remove('hidden');
-    });
+        <!-- 액션 버튼 -->
+        <div class="modal-action flex justify-end gap-2 mt-4">
+            <button class="bg-slate-500 text-white py-1 px-3 rounded-md hover:bg-slate-600 font-normal text-sm" onclick="saveCustomerInfo()">
+                저장
+            </button>
+            <button class="close py-1 px-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-normal border border-gray-300 text-sm">
+                닫기
+            </button>
+        </div>
+    </div>
+</dialog>
 
-    // Close popup
-    closePopup.addEventListener('click', () => {
-        popup.classList.add('hidden');
-    });
+<dialog id="updateModal" class="modal rounded-lg">
+    <div class="modal-box bg-white rounded-lg shadow-lg p-6 w-96 max-w-md">
+        <h3 class="text-base sm:text-lg font-medium mb-4 sm:mb-5">신랑1 / 신부1 드레스투어</h3>
 
-    // Add process row
-    addProcess.addEventListener('click', () => {
-        addProcessRow();
-    });
+        <!-- 안내 여부 -->
+        <div class="mb-6">
+            <h4 class="text-sm font-semibold mb-2">안내 여부</h4>
+            <div class="space-y-2">
+                <label class="flex items-center">
+                    <input type="checkbox" id="checkboxD31" class="form-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded" disabled>
+                    <span class="ml-2 text-sm">D-31</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" id="checkboxD14" class="form-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded" disabled>
+                    <span class="ml-2 text-sm">D-14</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" id="checkboxD2" class="form-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded" disabled>
+                    <span class="ml-2 text-sm">D-2</span>
+                </label>
+            </div>
+        </div>
 
-    // Add a new row
-    const addProcessRow = () => {
-        const clone = processTemplate.content.cloneNode(true);
-        const removeButton = clone.querySelector('.removeRow');
-        removeButton.addEventListener('click', (e) => {
-            e.target.closest('tr').remove();
-        });
-        processList.appendChild(clone);
-    };
+        <!-- 발주 여부 -->
+        <div class="mb-6">
+            <h4 class="text-sm font-semibold mb-2">발주 여부</h4>
+            <select id="orderStatus" class="w-full bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200" disabled>
+                <option value="" disabled selected>선택하세요</option>
+                <option value="orderWait">발주 대기</option>
+                <option value="orderComplete">발주 완료</option>
+                <option value="secondOrderWait">2차 발주 대기</option>
+                <option value="secondOrderComplete">2차 발주 완료</option>
+            </select>
+        </div>
 
-    // Reset popup (clear inputs and add a default row)
-    const resetPopup = () => {
-        document.getElementById('groomName').value = '';
-        document.getElementById('brideName').value = '';
-        processList.innerHTML = ''; // Clear all rows
-        addProcessRow(); // Add a default row
-    };
+        <!-- 액션 버튼 -->
+        <div class="modal-action flex justify-end gap-2 mt-4">
+            <button id="editBtn" class="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
+                수정
+            </button>
+            <button class="close py-1 px-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-normal border border-gray-300 text-sm">
+                닫기
+            </button>
+        </div>
+    </div>
+</dialog>
 
-    // Save button action
-    saveProcess.addEventListener('click', () => {
-        alert('저장되었습니다.');
-        popup.classList.add('hidden');
-    });
-
-    // Cancel button action
-    cancelProcess.addEventListener('click', () => {
-        if (confirm('취소하시겠습니까?')) {
-            popup.classList.add('hidden');
-        }
-
-    });
-
-    const closeCheckboxPopup = document.getElementById('closeCheckboxPopup');
-    const popupCheckbox = document.getElementById('popupCheckbox');
-    const popupContent = document.getElementById('popupContent');
-
-    // Close the popup when the close button is clicked
-    closeCheckboxPopup.addEventListener('click', () => {
-        popupCheckbox.classList.add('hidden');
-    });
-
-    // Close the popup when clicking outside of the popup content
-    popupCheckbox.addEventListener('click', (e) => {
-        if (!popupContent.contains(e.target)) {
-            popupCheckbox.classList.add('hidden');
-        }
-    });
-
-    const editButton = document.getElementById('editButton');
-    const tooltip = document.getElementById('tooltip');
-
-    // 수정 버튼 클릭 이벤트
-    editButton.addEventListener('click', () => {
-        // 체크박스 활성화
-        document.getElementById('checkboxD31').disabled = false;
-        document.getElementById('checkboxD14').disabled = false;
-        document.getElementById('checkboxD2').disabled = false;
-
-        // 셀렉트 박스 활성화
-        document.getElementById('orderStatus').disabled = false;
-
-        // 수정 버튼 비활성화
-        editButton.disabled = true;
-
-        // 버튼 텍스트 변경
-        editButton.textContent = '수정 중';
-
-        // 말풍선 표시
-        tooltip.classList.remove('hidden');
-        tooltip.classList.add('opacity-100');
-
-        // 말풍선을 3초 뒤에 서서히 숨김
-        setTimeout(() => {
-            tooltip.classList.remove('opacity-100');
-            tooltip.classList.add('opacity-0');
-            setTimeout(() => tooltip.classList.add('hidden'), 500); // 숨김 후 완전히 제거
-        }, 1000);
-    });
-</script>
 </body>
+<script th:src="@{/js/wedding.js}"></script>
+<script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // JWT 토큰 쿠키 확인
+    //     const token = document.cookie
+    //         .split("; ")
+    //         .find(row => row.startsWith("token="));
+    //
+    //     // 토큰이 없으면 로그인 페이지로 이동
+    //     if (!token) {
+    //         window.location.href = "/auth/login";
+    //     } else {
+    //         window.location.href = "/";
+    //     }
+    // });
+</script>
 </html>

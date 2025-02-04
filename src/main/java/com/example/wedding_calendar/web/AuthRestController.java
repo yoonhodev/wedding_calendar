@@ -5,14 +5,20 @@ import com.example.wedding_calendar.dto.LoginResponseDto;
 import com.example.wedding_calendar.entity.User;
 import com.example.wedding_calendar.repository.UserRepository;
 import com.example.wedding_calendar.security.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -31,14 +37,50 @@ public class AuthRestController {
     // 로그인(JWT 발급)
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
-        Optional<User> optionalUser = userRepository.findById(request.getId());
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if(optionalUser.isEmpty() || !passwordEncoder.matches(request.getPw(), optionalUser.get().getPw())) {
-            return ResponseEntity.status(401).body("비밀번호 오류");
+        if (!passwordEncoder.matches(request.getPw(), user.getPw())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 오류");
         }
 
-        String token = jwtTokenProvider.createToken(optionalUser.get().getId());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
-        return ResponseEntity.ok(new LoginResponseDto(token));
+
+        // HttpOnly 쿠키 설정
+        ResponseCookie refreshCookie = ResponseCookie.from("token", refreshToken)
+                .httpOnly(true)  // JavaScript에서 접근 불가 (보안 강화)
+                .secure(true)  // HTTPS에서만 전송
+                .path("/")  // 모든 경로에서 사용 가능
+                .maxAge(7 * 24 * 60 * 60)  // 1일 유지
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(new LoginResponseDto(refreshToken));
     }
+
+    // Refresh Token 갱신
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(HttpServletRequest request) {
+
+        String refreshToken = Arrays.stream(request.getCookies())
+                .filter(c -> "refreshToken".equals(c.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+
+        if(refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh 토큰이 유효하지 않음");
+        }
+
+        String userId = jwtTokenProvider.getUserId(refreshToken);
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(user.getId());
+
+        return ResponseEntity.ok(new LoginResponseDto(newAccessToken));
+    }
+
 }

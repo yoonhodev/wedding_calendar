@@ -1,7 +1,5 @@
 package com.example.wedding_calendar.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,30 +14,47 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret:DEFAULT_SECRET}")
-    private final String secretKey;
-    private final long validityInMilliseconds;
     private Key key;
+    private final long accessTokenValidity;
+    private final long refreshTokenValidity;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
-                            @Value("${jwt.expiration}") long validityInMilliseconds) {
-        this.secretKey = secretKey;
-        this.validityInMilliseconds = validityInMilliseconds;
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.accessTokenValidity = 15 * 60 * 1000;
+        this.refreshTokenValidity = 7 * 24 * 60 * 60 * 1000;
     }
 
-    // JWT 토큰 생성
-    public String createToken(String userId) {
-        Claims claims = Jwts.claims().setSubject(userId);
+    // Access Token 생성
+    public String createAccessToken(String userId) {
+        return createToken(userId, accessTokenValidity);
+    }
+
+    // Refresh Token 생성
+    public String createRefreshToken(String userId) {
+        return createToken(userId, refreshTokenValidity);
+    }
+
+    private String createToken(String userId, long validity) {
+
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date expityDate = new Date(now.getTime() + validity);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .setSubject(userId)
                 .setIssuedAt(now)
-                .setExpiration(validity)
+                .setExpiration(expityDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    // 토큰 검증
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // 토큰에서 userId 추출
@@ -50,19 +65,14 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    // 토큰 검증
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    // 헤더에서 토큰 가져오기
+    // 토큰 추출
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        return (bearerToken != null && bearerToken.startsWith("Bearer ")) ? bearerToken.substring(7) : null;
+
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
     }
 }
