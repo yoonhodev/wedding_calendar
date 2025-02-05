@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -57,7 +58,10 @@ public class AuthRestController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(new LoginResponseDto(accessToken));
+                .body(Map.of(
+                        "accessToken", accessToken,
+                        "refreshToken", refreshToken
+                ));
     }
 
     // Refresh Token 갱신

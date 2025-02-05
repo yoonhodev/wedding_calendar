@@ -1,10 +1,20 @@
 const fetchWithAuth = async (endPoint, options = {}) => {
-    const token = localStorage.getItem("accessToken");
+    let token = localStorage.getItem("accessToken");
 
-    if(!token) {
-        console.log("토큰 없음. 로그인 페이지로 이동");
-        window.location.href = "/login";
-        return;
+    // accessToken 없으면 refreshToken으로 갱신 시도
+    if (!token) {
+        console.log("accessToken 없음. refreshToken 확인 후 갱신 시도");
+        const newAccessToken = await refreshAccessToken();
+
+        if (!newAccessToken) {
+            console.error("refreshToken도 없음. 로그인 페이지로 이동");
+            //window.location.href = "/login";
+            return;
+        }
+
+        console.log("새로운 accessToken 발급 완료");
+        localStorage.setItem("accessToken", newAccessToken);
+        token = newAccessToken;  // 새로 받은 accessToken을 사용
     }
 
     const headers = {
@@ -14,41 +24,50 @@ const fetchWithAuth = async (endPoint, options = {}) => {
     };
 
     try {
-        const response = await fetch(endPoint, { ...options, headers});
+        let response = await fetch(endPoint, { ...options, headers });
 
-        if(response.status === 401) {
+        if (response.status === 401) {
+            console.warn("accessToken 만료. refreshToken으로 재발급 시도");
+
             const newAccessToken = await refreshAccessToken();
-            if(newAccessToken) {
+            if (newAccessToken) {
+                console.log("새로운 accessToken 발급 완료");
                 localStorage.setItem("accessToken", newAccessToken);
-                return fetchWithAuth(endPoint, options);
+
+                // 새 accessToken으로 다시 요청
+                headers["Authorization"] = `Bearer ${newAccessToken}`;
+                response = await fetch(endPoint, { ...options, headers });
             } else {
-                window.location.href = "/auth/login";
+                console.error("refreshToken도 만료됨. 로그인 페이지로 이동");
+                window.location.href = "/login";
+                return;
             }
         }
 
         return response;
     } catch (error) {
-        console.error("API 요청 실패 :", error);
+        console.error("API 요청 실패:", error);
     }
-}
+};
 
+// refreshToken을 사용해 새 accessToken 요청
 const refreshAccessToken = async () => {
     try {
         const response = await fetch("/auth/refresh", {
             method: "POST",
-            credentials: "include" // 쿠키 포함
+            credentials: "include",  // refreshToken은 쿠키에서 가져옴
         });
 
         if (!response.ok) {
-            console.log("Refresh Token 만료");
+            console.error("refreshToken이 유효하지 않음.");
             return null;
         }
 
         const data = await response.json();
-        console.log('data', data);
-        return data.token; // newAccessToken
+
+        return data.token;
     } catch (error) {
-        console.error("토큰 갱신 오류 :", error);
+        console.error("refreshToken 갱신 실패:", error);
         return null;
     }
-}
+};

@@ -19,7 +19,13 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         const data = await response.json();
 
-        localStorage.setItem('accessToken', data.token);
+        if (data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+        }
+        if (data.refreshToken) {
+            localStorage.setItem("refreshToken", data.refreshToken);
+        }
+
         window.location.href = "/";
     } catch (error) {
         console.error("로그인 오류:", error);

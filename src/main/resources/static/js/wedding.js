@@ -429,8 +429,6 @@ const openUpdatePopup = (encodedCustomer, eventType) => {
 
 const saveCustomerInfo = async () => {
 
-    const csrfToken = await getCsrfToken(); // CSRF 토큰 가져오기
-
     const userId = 'admin';
     const husbandName = document.getElementById('husbandName').value;
     const wifeName = document.getElementById('wifeName').value;
@@ -455,14 +453,7 @@ const saveCustomerInfo = async () => {
     }
 
     try {
-        const response = await fetch('/api/customer', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "X-CSRF-TOKEN": csrfToken // CSRF 토큰 추가
-            },
-            body: JSON.stringify(params)
-        });
+        const response = fetchWithAuth("/api/customer", { method: "POST", body: JSON.stringify(data) });
 
         if(!response.ok) {
             throw new Error(`HTTP ERROR STATUS : ${response.status}`);
