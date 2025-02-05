@@ -47,9 +47,8 @@ public class AuthRestController {
         String accessToken = jwtTokenProvider.createAccessToken(user.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
-
         // HttpOnly 쿠키 설정
-        ResponseCookie refreshCookie = ResponseCookie.from("token", refreshToken)
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)  // JavaScript에서 접근 불가 (보안 강화)
                 .secure(true)  // HTTPS에서만 전송
                 .path("/")  // 모든 경로에서 사용 가능
@@ -58,7 +57,7 @@ public class AuthRestController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(new LoginResponseDto(refreshToken));
+                .body(new LoginResponseDto(accessToken));
     }
 
     // Refresh Token 갱신
@@ -76,9 +75,8 @@ public class AuthRestController {
         }
 
         String userId = jwtTokenProvider.getUserId(refreshToken);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(user.getId());
+        String newAccessToken = jwtTokenProvider.createAccessToken(userId);
 
         return ResponseEntity.ok(new LoginResponseDto(newAccessToken));
     }

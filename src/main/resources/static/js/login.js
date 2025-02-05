@@ -18,17 +18,14 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         }
 
         const data = await response.json();
-        console.log("JWT 토큰:", data.token);
 
-        localStorage.setItem("token", data.token);
+        localStorage.setItem('accessToken', data.token);
         window.location.href = "/";
     } catch (error) {
         console.error("로그인 오류:", error);
-        console.log("JWT 토큰:", data.token);
         alert(error.message);
     }
 });
-
 
 // 로그인 실패 시 URL에 `?error=true`가 포함되면 경고창 띄우기
 const urlParams = new URLSearchParams(window.location.search);

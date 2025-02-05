@@ -5,8 +5,6 @@ const getCsrfToken = async () => {
 };
 
 document.addEventListener("DOMContentLoaded" ,async function () {
-
-    console.log('wedding.js start');
     await fetchCustomerList();
 })
 
@@ -34,25 +32,25 @@ closeModal.forEach((button) => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addOptionBtn = document.getElementById('addOptionBtn');
-    const optionSelectWrapper = document.getElementById('optionSelectWrapper');
-    const optionSelect = document.getElementById('optionSelect');
-    const dateLabel = document.getElementById('dateLabel');
-    const dateInput = document.getElementById('dateInput');
-
-    // + 버튼 클릭 시 분류 선택 보여주기
-    addOptionBtn.addEventListener('click', () => {
-        optionSelectWrapper.classList.toggle('hidden');
-    });
-
-    // 분류 선택 시 "신청 날짜"에 옵션 반영
-    optionSelect.addEventListener('change', (e) => {
-        const selectedOption = e.target.value;
-        dateLabel.textContent = `분류: ${selectedOption}`;
-        dateInput.type = 'date'; // 달력 표시
-    });
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const addOptionBtn = document.getElementById('addOptionBtn');
+//     const optionSelectWrapper = document.getElementById('optionSelectWrapper');
+//     const optionSelect = document.getElementById('optionSelect');
+//     const dateLabel = document.getElementById('dateLabel');
+//     const dateInput = document.getElementById('dateInput');
+//
+//     // + 버튼 클릭 시 분류 선택 보여주기
+//     addOptionBtn.addEventListener('click', () => {
+//         optionSelectWrapper.classList.toggle('hidden');
+//     });
+//
+//     // 분류 선택 시 "신청 날짜"에 옵션 반영
+//     optionSelect.addEventListener('change', (e) => {
+//         const selectedOption = e.target.value;
+//         dateLabel.textContent = `분류: ${selectedOption}`;
+//         dateInput.type = 'date'; // 달력 표시
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
     const dynamicFields = document.getElementById('dynamicFields');
@@ -182,19 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const fetchCustomerList = async () => {
-    const token = localStorage.getItem('token');
     try {
-        const response = await fetch('/api/customer', {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
+        const response = await fetchWithAuth("/api/customer", { method: "GET" } )
+        const data = await response.json();
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
 
         createCalendar(data.data);
         createGuideList(data.data);
@@ -205,7 +196,6 @@ const fetchCustomerList = async () => {
 };
 
 const createCalendar = (data) => {
-    console.log('data :', data);
     const calendarList = document.getElementById('calendarList');
     if (!calendarList) {
         console.error("Element with id 'calendarList' not found.");
@@ -234,7 +224,6 @@ const createCalendar = (data) => {
 };
 
 const createTdColumns = (customer) => {
-    console.log('customer :', customer);
 
     const events = customer.events;
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
@@ -336,7 +325,6 @@ const formatDate = (date) => {
 };
 
 const createGuideList = (data) => {
-    console.log('data :', data);
     const dDayList = document.getElementById('dDayList');
     const d31 = document.getElementById(('D-31'));
     const d14 = document.getElementById('D-14');
@@ -408,14 +396,10 @@ const createGuideList = (data) => {
 
 const openUpdatePopup = (encodedCustomer, eventType) => {
     const updateModalTitle = document.querySelector('#updateModal h3');
-    const orderStatus = document.getElementById('orderStatus');
     const customer = JSON.parse(decodeURIComponent(encodedCustomer));
-    console.log('Customer Data:', customer);
 
     // 선택한 이벤트 타입에 따라 이벤트 찾기
     const targetEvent = customer.events.find(event => event.eventType === eventType);
-
-    console.log('targetEvent :', targetEvent);
 
     // 제목 업데이트
     updateModalTitle.textContent = `${customer.husbandName} / ${customer.wifeName} ${eventType}`;
@@ -469,8 +453,6 @@ const saveCustomerInfo = async () => {
         wifeName,
         events
     }
-
-    console.log('events :', events);
 
     try {
         const response = await fetch('/api/customer', {
