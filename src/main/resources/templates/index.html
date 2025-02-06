@@ -47,8 +47,8 @@
         <div class="flex justify-between items-center mb-6">
             <div></div> <!-- Left Space -->
             <div class="flex items-center gap-4">
-                <span class="font-medium tracking-wide text-xs sm:text-sm text-slate-600">장한별</span>
-                <button id="testModal" class="bg-slate-400 px-3 py-1 text-xs sm:text-sm text-white rounded-full border-2 border-slate-300 shadow-sm hover:bg-slate-500">
+                <span id="userName" class="font-medium tracking-wide text-xs sm:text-sm text-slate-600"></span>
+                <button id="logout" type="button" class="bg-slate-400 px-3 py-1 text-xs sm:text-sm text-white rounded-full border-2 border-slate-300 shadow-sm hover:bg-slate-500" onclick="logout()">
                     Logout
                 </button>
             </div>
@@ -376,19 +376,4 @@
 </body>
 <script th:src="@{/js/auth.js}"></script>
 <script th:src="@{/js/wedding.js}"></script>
-<script>
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     // JWT 토큰 쿠키 확인
-    //     const token = document.cookie
-    //         .split("; ")
-    //         .find(row => row.startsWith("token="));
-    //
-    //     // 토큰이 없으면 로그인 페이지로 이동
-    //     if (!token) {
-    //         window.location.href = "/auth/login";
-    //     } else {
-    //         window.location.href = "/";
-    //     }
-    // });
-</script>
 </html>

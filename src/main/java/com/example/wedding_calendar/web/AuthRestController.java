@@ -2,11 +2,14 @@ package com.example.wedding_calendar.web;
 
 import com.example.wedding_calendar.dto.LoginRequestDto;
 import com.example.wedding_calendar.dto.LoginResponseDto;
+import com.example.wedding_calendar.dto.SignupRequestDto;
 import com.example.wedding_calendar.entity.User;
 import com.example.wedding_calendar.repository.UserRepository;
 import com.example.wedding_calendar.security.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +63,8 @@ public class AuthRestController {
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(Map.of(
                         "accessToken", accessToken,
-                        "refreshToken", refreshToken
+                        "refreshToken", refreshToken,
+                        "name", user.getName()
                 ));
     }
 
@@ -79,10 +83,47 @@ public class AuthRestController {
         }
 
         String userId = jwtTokenProvider.getUserId(refreshToken);
-
         String newAccessToken = jwtTokenProvider.createAccessToken(userId);
 
         return ResponseEntity.ok(new LoginResponseDto(newAccessToken));
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+
+        if(userRepository.findById(requestDto.getUserId()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+        }
+
+        if(userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+
+        User user = User.builder()
+                .id(requestDto.getUserId())
+                .name(requestDto.getName())
+                .email(requestDto.getEmail())
+                .pw(encodedPassword)
+                .build();
+        userRepository.save(user);
+
+        return ResponseEntity.ok("회원가입 성공");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(Map.of("message", "로그아웃 성공"));
+    }
 }

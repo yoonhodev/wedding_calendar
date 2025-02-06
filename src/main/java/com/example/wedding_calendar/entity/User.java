@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
     @Column(name = "id", unique = true, nullable = false)
@@ -45,5 +46,12 @@ public class User {
     public void prePersist() {
         this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public User(String id, String name, String email, String pw) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.pw = pw;
     }
 }

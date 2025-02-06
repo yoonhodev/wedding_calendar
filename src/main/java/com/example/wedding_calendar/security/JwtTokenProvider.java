@@ -1,5 +1,6 @@
 package com.example.wedding_calendar.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -26,7 +27,16 @@ public class JwtTokenProvider {
 
     // Access Token 생성
     public String createAccessToken(String userId) {
-        return createToken(userId, accessTokenValidity);
+        Claims claims = Jwts.claims().setSubject(userId);
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + accessTokenValidity);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     // Refresh Token 생성

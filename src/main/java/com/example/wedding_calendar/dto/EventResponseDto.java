@@ -16,5 +16,6 @@ public class EventResponseDto {
     private Integer guide31Days;
     private Integer guide14Days;
     private Integer guide2Days;
+
     private String orderStatus;
 }

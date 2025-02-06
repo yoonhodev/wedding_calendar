@@ -1,18 +1,13 @@
-const getCsrfToken = async () => {
-    const response = await fetch("/csrf-token");
-    const data = await response.json();
-    return data.csrfToken;
-};
-
 document.addEventListener("DOMContentLoaded" ,async function () {
     await fetchCustomerList();
+    document.getElementById('userName').innerHTML = localStorage.getItem('name');
 })
 
 const openModal = document.getElementById('openModal');
 const closeModal = document.querySelectorAll('.close');
 const writeModal = document.getElementById('writeModal');
 
-const testModal = document.getElementById('testModal');
+const testModal = document.getElementById('logout');
 const updateModal = document.getElementById('updateModal');
 
 // 모달 열기
@@ -20,9 +15,9 @@ openModal.addEventListener('click', () => {
     writeModal.showModal();
 });
 
-testModal.addEventListener('click', () => {
-    updateModal.showModal();
-})
+// testModal.addEventListener('click', () => {
+//     updateModal.showModal();
+// })
 
 // 닫기
 closeModal.forEach((button) => {
@@ -250,9 +245,9 @@ const createTdColumns = (customer) => {
                     ${newOrderStatus}
                 </div>
                 <div class="absolute bottom-1 left-1 flex space-x-1">
-                    <span class="w-2 h-2 bg-orange-300 rounded-md"></span>
-                    <span class="w-2 h-2 bg-yellow-300 rounded-md"></span>
-                    <span class="w-2 h-2 bg-green-300 rounded-md"></span>
+                    <span class="w-2 h-2 bg-orange-300 rounded-sm"></span>
+                    <span class="w-2 h-2 bg-yellow-300 rounded-sm"></span>
+                    <span class="w-2 h-2 bg-green-300 rounded-sm"></span>
                 </div>
                 <div class="absolute bottom-1 right-1 text-xs text-gray-400">${formatDate(dDay)}</div>
             </td>
@@ -445,7 +440,7 @@ const saveCustomerInfo = async () => {
         }
     });
 
-    const params = {
+    const data = {
         userId,
         husbandName,
         wifeName,
@@ -462,5 +457,22 @@ const saveCustomerInfo = async () => {
         console.error(error);
     } finally {
         location.reload();
+    }
+}
+
+const logout = async () => {
+    try {
+        await fetch("/auth/logout", {
+            method: "POST",
+            credentials: "include"
+        })
+
+        localStorage.removeItem("name");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        window.location.href = "/login";
+    } catch (error) {
+        console.error("로그아웃 실패:", error);
     }
 }

@@ -18,9 +18,9 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final EventRepository eventRepository;
 
-    public List<CustomerWithEventsDto> getAllCustomersWithEvents() {
-        return customerRepository.findAll().stream().map(customer ->
-                new CustomerWithEventsDto(
+    public List<CustomerWithEventsDto> getCustomersByUserId(String userId) {
+        return customerRepository.findByUserId(userId).stream()
+                .map(customer -> new CustomerWithEventsDto(
                         customer.getIdx(),
                         customer.getHusbandName(),
                         customer.getWifeName(),

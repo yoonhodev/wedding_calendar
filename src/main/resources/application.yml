@@ -13,11 +13,6 @@ spring:
       ddl-auto: none
     database-platform: com.example.wedding_calendar.config.SQLiteDialect
 
-  security:
-    user:
-      name: admin
-      password: 1234
-
 jwt:
   secret: "jwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwt"
   expiration: 115200000

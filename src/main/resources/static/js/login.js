@@ -26,6 +26,8 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             localStorage.setItem("refreshToken", data.refreshToken);
         }
 
+        localStorage.setItem("name", data.name);
+
         window.location.href = "/";
     } catch (error) {
         console.error("로그인 오류:", error);

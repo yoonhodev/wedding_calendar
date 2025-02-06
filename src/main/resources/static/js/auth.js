@@ -8,7 +8,7 @@ const fetchWithAuth = async (endPoint, options = {}) => {
 
         if (!newAccessToken) {
             console.error("refreshToken도 없음. 로그인 페이지로 이동");
-            //window.location.href = "/login";
+            window.location.href = "/login";
             return;
         }
 
@@ -55,14 +55,13 @@ const refreshAccessToken = async () => {
     try {
         const response = await fetch("/auth/refresh", {
             method: "POST",
-            credentials: "include",  // refreshToken은 쿠키에서 가져옴
+            credentials: "include", // refreshToken은 쿠키에서 가져옴
         });
 
         if (!response.ok) {
             console.error("refreshToken이 유효하지 않음.");
             return null;
         }
-
         const data = await response.json();
 
         return data.token;

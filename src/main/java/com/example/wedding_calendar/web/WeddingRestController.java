@@ -5,6 +5,7 @@ import com.example.wedding_calendar.dto.CustomerResponseDto;
 import com.example.wedding_calendar.dto.CustomerWithEventsDto;
 import com.example.wedding_calendar.entity.User;
 import com.example.wedding_calendar.repository.UserRepository;
+import com.example.wedding_calendar.security.JwtTokenProvider;
 import com.example.wedding_calendar.service.CustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,20 @@ public class WeddingRestController {
 
     private final CustomerService customerService;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public WeddingRestController(CustomerService customerService, UserRepository userRepository) {
+    public WeddingRestController(CustomerService customerService, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
         this.customerService = customerService;
         this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @GetMapping("/customer")
-    public ResponseEntity<Map<String, Object>> getCustomerList() {
+    public ResponseEntity<Map<String, Object>> getCustomerList(@RequestHeader("Authorization") String token) {
 
-        List<CustomerWithEventsDto> customerList = customerService.getAllCustomersWithEvents();
+        String userId = jwtTokenProvider.getUserId(token.replace("Bearer ", ""));
+
+        List<CustomerWithEventsDto> customerList = customerService.getCustomersByUserId(userId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
