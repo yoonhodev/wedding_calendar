@@ -225,6 +225,7 @@ const createTdColumns = (customer) => {
     let tdHtml = '';
 
     for (let type of eventTypes) {
+        console.log(customer);
         const targetEvent = events.find(event => event.eventType === type);
         const orderStatus = targetEvent ? targetEvent.orderStatus || '상태 없음' : '미등록';
         const newOrderStatus = transformOrderStatus(orderStatus);
@@ -259,12 +260,12 @@ const createTdColumns = (customer) => {
 
     // 추가 열 생성
     tdHtml += `
-        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden">
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden" onclick="saveMakeup('rehearsal', ${customer})">
             <span class="block truncate max-w-[250px]">
                 ${makeupRehearsal}
             </span>
         </td>
-        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden">
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden" onclick="saveMakeup('wedding', ${customer})">
             <span class="block truncate max-w-[250px]">
                 ${makeupWedding}
             </span>
@@ -474,5 +475,30 @@ const logout = async () => {
         window.location.href = "/login";
     } catch (error) {
         console.error("로그아웃 실패:", error);
+    }
+}
+
+const saveMakeup = async (type, customerId, value) => {
+
+    const data = {
+        type,
+        customerId,
+        value
+    }
+
+    try {
+        const response = await fetchWithAuth("/api/makeup", {
+            method: "POST",
+            headers: "application/json",
+            body: JSON.stringify(data),
+        })
+
+        if(!response.ok) {
+            throw new Error(`HTTP ERROR STATUS : ${response.status}`);
+        }
+    } catch (error) {
+        console.error("makeup 데이터 입력 실패", error)
+    } finally {
+        location.reload();
     }
 }

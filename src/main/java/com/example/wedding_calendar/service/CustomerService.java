@@ -84,4 +84,17 @@ public class CustomerService {
                 .events(eventDtos)
                 .build();
     }
+
+    public void saveMakeup(MakeupRequestDto requestDto, Customer customer) {
+        if("rehearsal".equals(requestDto.getType())) {
+            customer.setMakeupRehearsal(requestDto.getValue());
+        } else if("wedding".equals(requestDto.getType())) {
+            customer.setMakeupWedding(requestDto.getValue());
+        } else {
+            throw new IllegalArgumentException("잘못된 메이크업 타입 :" + requestDto.getType());
+        }
+
+        customerRepository.save(customer);
+
+    }
 }
