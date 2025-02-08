@@ -7,6 +7,7 @@ import com.example.wedding_calendar.repository.CustomerRepository;
 import com.example.wedding_calendar.repository.UserRepository;
 import com.example.wedding_calendar.security.JwtTokenProvider;
 import com.example.wedding_calendar.service.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,16 @@ public class WeddingRestController {
     @GetMapping("/customer")
     public ResponseEntity<Map<String, Object>> getCustomerList(@RequestHeader("Authorization") String token) {
 
-        String userId = jwtTokenProvider.getUserId(token.replace("Bearer ", ""));
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized: No Token Provided"));
+        }
+
+        String userId;
+        try {
+            userId = jwtTokenProvider.getUserId(token.replace("Bearer ", ""));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "invalid Token"));
+        }
 
         List<CustomerWithEventsDto> customerList = customerService.getCustomersByUserId(userId);
 
@@ -59,6 +69,8 @@ public class WeddingRestController {
 
     @PostMapping("/makeup")
     public ResponseEntity<?> saveMakeup(@RequestBody MakeupRequestDto requestDto) {
+
+        System.out.println("requestDto :" + requestDto);
 
         Customer customer = customerRepository.findById(requestDto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + requestDto.getCustomerId()));

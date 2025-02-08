@@ -193,6 +193,31 @@
     </div>
 </dialog>
 
+<!-- 모달 백그라운드 -->
+<dialog id="makeupModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 id="makeupTitle" class="text-lg font-bold mb-4 text-center">
+            </h2>
+
+            <label for="makeupText">
+                <textarea id="makeupText" class="w-full h-80 p-2 border rounded-md bg-gray-100 resize-none text-left align-top" disabled></textarea>
+            </label>
+
+            <div class="modal-action flex justify-end gap-2 mt-4">
+                <button id="saveMakeupBtn" class="hidden bg-green-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
+                    저장
+                </button>
+                <button id="editMakeupBtn" class="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
+                    수정
+                </button>
+                <button class="close py-1 px-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-normal border border-gray-300 text-sm">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+</dialog>
 </body>
 <script th:src="@{/js/auth.js}"></script>
 <script th:src="@{/js/wedding.js}"></script>

@@ -9,6 +9,9 @@ import com.example.wedding_calendar.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,25 +22,37 @@ public class CustomerService {
     private final EventRepository eventRepository;
 
     public List<CustomerWithEventsDto> getCustomersByUserId(String userId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return customerRepository.findByUserId(userId).stream()
-                .map(customer -> new CustomerWithEventsDto(
-                        customer.getIdx(),
-                        customer.getHusbandName(),
-                        customer.getWifeName(),
-                        customer.getMakeupRehearsal(),
-                        customer.getMakeupWedding(),
-                        customer.getEvents().stream()
-                                .map(event -> new EventDto(
-                                        event.getIdx(),
-                                        event.getEventType(),
-                                        event.getDDay(),
-                                        event.getGuide31Days(),
-                                        event.getGuide14Days(),
-                                        event.getGuide2Days(),
-                                        event.getOrderStatus()
-                                ))
-                                .collect(Collectors.toList())
-                ))
+                .map(customer -> {
+                    List<EventDto> sortedEvents = customer.getEvents().stream()
+                            .filter(event -> "본식".equals(event.getEventType()))
+                            .filter(event -> event.getDDay() != null && !event.getDDay().isEmpty())
+                            .map(event -> new EventDto( // Event > EventDto 변환
+                                    event.getIdx(),
+                                    event.getEventType(),
+                                    event.getDDay(),
+                                    event.getGuide31Days(),
+                                    event.getGuide14Days(),
+                                    event.getGuide2Days(),
+                                    event.getOrderStatus()
+                            ))
+                            .sorted(Comparator.comparing(event -> LocalDate.parse(event.getDDay(), formatter)))
+                            .collect(Collectors.toList());
+
+                    return new CustomerWithEventsDto(
+                            customer.getIdx(),
+                            customer.getHusbandName(),
+                            customer.getWifeName(),
+                            customer.getMakeupRehearsal(),
+                            customer.getMakeupWedding(),
+                            sortedEvents
+                    );
+                })
+                .sorted(Comparator.comparing(customer ->
+                        customer.getEvents().isEmpty() ? LocalDate.MAX :
+                                LocalDate.parse(customer.getEvents().get(0).getDDay(), formatter))) // 고객별 가장 빠른 본식 기준 정렬
                 .collect(Collectors.toList());
     }
 
@@ -86,9 +101,9 @@ public class CustomerService {
     }
 
     public void saveMakeup(MakeupRequestDto requestDto, Customer customer) {
-        if("rehearsal".equals(requestDto.getType())) {
+        if("R".equals(requestDto.getType())) {
             customer.setMakeupRehearsal(requestDto.getValue());
-        } else if("wedding".equals(requestDto.getType())) {
+        } else if("W".equals(requestDto.getType())) {
             customer.setMakeupWedding(requestDto.getValue());
         } else {
             throw new IllegalArgumentException("잘못된 메이크업 타입 :" + requestDto.getType());

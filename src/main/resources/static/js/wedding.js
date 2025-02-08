@@ -3,6 +3,44 @@ document.addEventListener("DOMContentLoaded" ,async function () {
     document.getElementById('userName').innerHTML = localStorage.getItem('name');
 })
 
+document.addEventListener("DOMContentLoaded", () => {
+    const editMakeupBtn = document.getElementById("editMakeupBtn");
+    const saveMakeupBtn = document.getElementById("saveMakeupBtn");
+    const makeupText = document.getElementById("makeupText");
+    const closeButtons = document.querySelectorAll(".close");
+
+    // 수정 버튼 클릭 시
+    editMakeupBtn.addEventListener("click", () => {
+        makeupText.removeAttribute("disabled"); // 입력 가능하게 변경
+        editMakeupBtn.classList.add("hidden"); // 수정 버튼 숨기기
+        saveMakeupBtn.classList.remove("hidden"); // 저장 버튼 표시
+        makeupText.classList.remove("bg-gray-100"); // 배경색 변경
+        makeupText.classList.add("bg-white", "border-blue-400"); // 활성화 스타일 추가
+        makeupText.focus(); // 포커스 주기
+    });
+
+    // 닫기 버튼 클릭 시
+    closeButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            resetModal();
+        });
+    });
+});
+
+// 저장 또는 닫기 버튼 클릭 시 (모두 동일한 동작 수행)
+const resetModal = () => {
+    const editMakeupBtn = document.getElementById("editMakeupBtn");
+    const saveMakeupBtn = document.getElementById("saveMakeupBtn");
+    const makeupText = document.getElementById("makeupText");
+
+    makeupText.setAttribute("disabled", true); // 다시 비활성화
+    saveMakeupBtn.classList.add("hidden"); // 저장 버튼 숨기기
+    editMakeupBtn.classList.remove("hidden"); // 수정 버튼 표시
+    makeupText.classList.add("bg-gray-100"); // 원래 배경색 복구
+    makeupText.classList.remove("bg-white", "border-blue-400"); // 활성화 스타일 제거
+};
+
+
 const openModal = document.getElementById('openModal');
 const closeModal = document.querySelectorAll('.close');
 const writeModal = document.getElementById('writeModal');
@@ -24,28 +62,9 @@ closeModal.forEach((button) => {
     button.addEventListener('click', () => {
         document.getElementById('writeModal').close();
         document.getElementById('updateModal').close();
+        document.getElementById('makeupModal').classList.add('hidden');
     });
 });
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const addOptionBtn = document.getElementById('addOptionBtn');
-//     const optionSelectWrapper = document.getElementById('optionSelectWrapper');
-//     const optionSelect = document.getElementById('optionSelect');
-//     const dateLabel = document.getElementById('dateLabel');
-//     const dateInput = document.getElementById('dateInput');
-//
-//     // + 버튼 클릭 시 분류 선택 보여주기
-//     addOptionBtn.addEventListener('click', () => {
-//         optionSelectWrapper.classList.toggle('hidden');
-//     });
-//
-//     // 분류 선택 시 "신청 날짜"에 옵션 반영
-//     optionSelect.addEventListener('change', (e) => {
-//         const selectedOption = e.target.value;
-//         dateLabel.textContent = `분류: ${selectedOption}`;
-//         dateInput.type = 'date'; // 달력 표시
-//     });
-// });
 
 document.addEventListener('DOMContentLoaded', () => {
     const dynamicFields = document.getElementById('dynamicFields');
@@ -199,8 +218,9 @@ const createCalendar = (data) => {
 
     let html = '';
 
-    for (let customer of data) {
-        html += `
+    if(data.length !== 0) {
+        for (let customer of data) {
+            html += `
             <tr class="border-b border-slate-200">
                 <td class="text-center w-[10%] whitespace-nowrap overflow-hidden truncate">
                     ${customer.husbandName} / ${customer.wifeName}
@@ -208,24 +228,34 @@ const createCalendar = (data) => {
                 ${createTdColumns(customer)}
             </tr>
         `;
-    }
+        }
 
-    html += `
+        html += `
             </tbody>
         </table>
-    `;
+        `;
+    } else {
+        html += `
+            <tr>
+                <td colspan="100%">
+                    <div class="flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg shadow-md">
+                        <p class="text-xl font-semibold text-gray-700 mb-2">데이터가 존재하지 않습니다.</p>
+                        <p class="text-sm text-gray-500">우측 하단의 <span class="text-blue-500 font-bold">+ 버튼</span>을 눌러 고객 데이터를 추가해주세요.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
 
     calendarList.innerHTML = html;
 };
 
 const createTdColumns = (customer) => {
-
     const events = customer.events;
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
 
     for (let type of eventTypes) {
-        console.log(customer);
         const targetEvent = events.find(event => event.eventType === type);
         const orderStatus = targetEvent ? targetEvent.orderStatus || '상태 없음' : '미등록';
         const newOrderStatus = transformOrderStatus(orderStatus);
@@ -240,7 +270,8 @@ const createTdColumns = (customer) => {
 
         // TD 클래스에 조건부 스타일 추가
         tdHtml += `
-            <td class="p-4 text-center text-sm relative cursor-pointer w-[15%] truncate whitespace-nowrap overflow-hidden ${isPast ? 'bg-gray-100 text-gray-300' : ''}" onclick="openUpdatePopup('${encodeURIComponent(JSON.stringify(customer))}','${type}')">
+            <td class="p-4 text-center text-sm relative cursor-pointer w-[15%] truncate whitespace-nowrap overflow-hidden ${isPast ? 'bg-gray-100 text-gray-300' : ''}"
+                onclick="openUpdatePopup('${encodeURIComponent(JSON.stringify(customer))}','${type}')">
                 ${targetEvent ? `${dDayText}` : 'N/A'}
                 <div class="absolute bottom-3 left-1 text-[10px] ${deactivateClass}">
                     ${newOrderStatus}
@@ -260,16 +291,19 @@ const createTdColumns = (customer) => {
 
     // 추가 열 생성
     tdHtml += `
-        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden" onclick="saveMakeup('rehearsal', ${customer})">
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden cursor-pointer" 
+            onclick="openMakeupModal('R', '${customer.customerId}', '${customer.husbandName}', '${customer.wifeName}', '${makeupRehearsal}')">
             <span class="block truncate max-w-[250px]">
                 ${makeupRehearsal}
             </span>
         </td>
-        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden" onclick="saveMakeup('wedding', ${customer})">
+        <td class="p-4 text-center text-sm relative w-[7.5%] overflow-hidden cursor-pointer"
+            onclick="openMakeupModal('W', '${customer.customerId}', '${customer.husbandName}', '${customer.wifeName}', '${makeupWedding}')">
             <span class="block truncate max-w-[250px]">
                 ${makeupWedding}
             </span>
         </td>
+            
     `;
 
     return tdHtml;
@@ -425,7 +459,7 @@ const openUpdatePopup = (encodedCustomer, eventType) => {
 
 const saveCustomerInfo = async () => {
 
-    const userId = 'admin';
+    const userId = localStorage.getItem('username');
     const husbandName = document.getElementById('husbandName').value;
     const wifeName = document.getElementById('wifeName').value;
 
@@ -448,6 +482,16 @@ const saveCustomerInfo = async () => {
         events
     }
 
+    if(!husbandName || !wifeName) {
+        alert('신랑, 신부 이름은 필수입니다.');
+        return;
+    }
+
+    if(events.length === 0) {
+        alert('일정을 1개 이상 추가해주세요.');
+        return;
+    }
+
     try {
         const response = fetchWithAuth("/api/customer", { method: "POST", body: JSON.stringify(data) });
 
@@ -468,6 +512,7 @@ const logout = async () => {
             credentials: "include"
         })
 
+        localStorage.removeItem("username");
         localStorage.removeItem("name");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
@@ -478,27 +523,37 @@ const logout = async () => {
     }
 }
 
-const saveMakeup = async (type, customerId, value) => {
+const openMakeupModal = (type, customerId, husbandName, wifeName, value) => {
+    const makeupModal = document.getElementById('makeupModal');
+    const makeupTitle = document.getElementById('makeupTitle');
+    const makeupText = document.getElementById('makeupText');
+    const saveMakeupBtn = document.getElementById('saveMakeupBtn');
 
-    const data = {
-        type,
-        customerId,
-        value
-    }
+    makeupTitle.innerHTML = `
+        <span id="makeupCustomer" class="block">${husbandName} / ${wifeName}</span>
+        <span id="makeupType" class="block">${type}</span>
+    `
+    makeupText.value = value || '';
+    saveMakeupBtn.onclick = () => saveMakeup(type, customerId, makeupText.value);
+
+    makeupModal.classList.remove('hidden');
+}
+
+const saveMakeup = async (type, customerId, value) => {
 
     try {
         const response = await fetchWithAuth("/api/makeup", {
             method: "POST",
-            headers: "application/json",
-            body: JSON.stringify(data),
-        })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type, customerId, value }),
+        });
 
-        if(!response.ok) {
-            throw new Error(`HTTP ERROR STATUS : ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP ERROR STATUS : ${response.status}`);
+
     } catch (error) {
-        console.error("makeup 데이터 입력 실패", error)
+        console.error("makeup 데이터 입력 실패", error);
     } finally {
-        location.reload();
+        resetModal();
+        location.reload();   // 새로고침
     }
-}
+};

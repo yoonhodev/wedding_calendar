@@ -26,6 +26,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             localStorage.setItem("refreshToken", data.refreshToken);
         }
 
+        localStorage.setItem("username", data.username);
         localStorage.setItem("name", data.name);
 
         window.location.href = "/";

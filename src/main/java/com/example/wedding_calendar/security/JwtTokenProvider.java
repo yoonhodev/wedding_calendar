@@ -1,8 +1,6 @@
 package com.example.wedding_calendar.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,7 +60,11 @@ public class JwtTokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT 만료됨: " + e.getMessage());
+            return false;  // 만료된 경우 false 반환 → refreshToken 체크 가능
+        } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("JWT 검증 실패: " + e.getMessage());
             return false;
         }
     }

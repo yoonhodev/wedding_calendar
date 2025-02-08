@@ -64,7 +64,8 @@ public class AuthRestController {
                 .body(Map.of(
                         "accessToken", accessToken,
                         "refreshToken", refreshToken,
-                        "name", user.getName()
+                        "name", user.getName(),
+                        "username", user.getId()
                 ));
     }
 
