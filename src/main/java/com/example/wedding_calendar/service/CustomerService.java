@@ -27,8 +27,6 @@ public class CustomerService {
         return customerRepository.findByUserId(userId).stream()
                 .map(customer -> {
                     List<EventDto> sortedEvents = customer.getEvents().stream()
-                            .filter(event -> "본식".equals(event.getEventType()))
-                            .filter(event -> event.getDDay() != null && !event.getDDay().isEmpty())
                             .map(event -> new EventDto( // Event > EventDto 변환
                                     event.getIdx(),
                                     event.getEventType(),
@@ -73,8 +71,8 @@ public class CustomerService {
                         .build())
                 .toList();
 
-        eventRepository.saveAll(events);
         savedCustomer.setEvents(events);
+        eventRepository.saveAll(events);
 
         return convertToResponseDto(savedCustomer);
     }

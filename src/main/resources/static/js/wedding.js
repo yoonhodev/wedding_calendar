@@ -45,17 +45,10 @@ const openModal = document.getElementById('openModal');
 const closeModal = document.querySelectorAll('.close');
 const writeModal = document.getElementById('writeModal');
 
-const testModal = document.getElementById('logout');
-const updateModal = document.getElementById('updateModal');
-
 // 모달 열기
 openModal.addEventListener('click', () => {
     writeModal.showModal();
 });
-
-// testModal.addEventListener('click', () => {
-//     updateModal.showModal();
-// })
 
 // 닫기
 closeModal.forEach((button) => {
@@ -174,8 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectBox.disabled = false;
             inputFields.forEach((input) => (input.disabled = false));
             editBtn.textContent = '저장';
-            editBtn.classList.replace('bg-blue-500', 'bg-green-500');
-            editBtn.classList.replace('hover:bg-blue-600', 'hover:bg-green-600');
+            editBtn.classList.replace('bg-slate-500', 'bg-blue-500');
+            editBtn.classList.replace('hover:bg-slate-600', 'hover:bg-blue-600');
             isEditing = true;
         } else {
             // Save changes and disable fields
@@ -183,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectBox.disabled = true;
             inputFields.forEach((input) => (input.disabled = true));
             editBtn.textContent = '수정';
-            editBtn.classList.replace('bg-green-500', 'bg-blue-500');
-            editBtn.classList.replace('hover:bg-green-600', 'hover:bg-blue-600');
+            editBtn.classList.replace('bg-blue-500', 'bg-slate-500');
+            editBtn.classList.replace('hover:bg-blue-600', 'hover:bg-slate-600');
             isEditing = false;
 
             // Optionally: Save data here or handle form submission
@@ -201,6 +194,7 @@ const fetchCustomerList = async () => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        console.log('data :', data.data);
         createCalendar(data.data);
         createGuideList(data.data);
 
@@ -238,7 +232,7 @@ const createCalendar = (data) => {
         html += `
             <tr>
                 <td colspan="100%">
-                    <div class="flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg shadow-md">
                         <p class="text-xl font-semibold text-gray-700 mb-2">데이터가 존재하지 않습니다.</p>
                         <p class="text-sm text-gray-500">우측 하단의 <span class="text-blue-500 font-bold">+ 버튼</span>을 눌러 고객 데이터를 추가해주세요.</p>
                     </div>
@@ -254,8 +248,9 @@ const createTdColumns = (customer) => {
     const events = customer.events;
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
-
+    console.log('events :', events);
     for (let type of eventTypes) {
+
         const targetEvent = events.find(event => event.eventType === type);
         const orderStatus = targetEvent ? targetEvent.orderStatus || '상태 없음' : '미등록';
         const newOrderStatus = transformOrderStatus(orderStatus);
@@ -286,8 +281,8 @@ const createTdColumns = (customer) => {
         `;
     }
 
-    const makeupRehearsal = `${customer.makeupRehearsal}` ? `${customer.makeupRehearsal}` : '';
-    const makeupWedding = `${customer.makeupWedding}` ? `${customer.makeupWedding}` : '';
+    const makeupRehearsal = customer.makeupRehearsal && customer.makeupRehearsal !== 'null' ? customer.makeupRehearsal : '';
+    const makeupWedding = customer.makeupWedding && customer.makeupWedding !== 'null' ? customer.makeupWedding : '';
 
     // 추가 열 생성
     tdHtml += `
@@ -529,15 +524,17 @@ const openMakeupModal = (type, customerId, husbandName, wifeName, value) => {
     const makeupText = document.getElementById('makeupText');
     const saveMakeupBtn = document.getElementById('saveMakeupBtn');
 
+    // 모달 내용 설정
     makeupTitle.innerHTML = `
         <span id="makeupCustomer" class="block">${husbandName} / ${wifeName}</span>
         <span id="makeupType" class="block">${type}</span>
-    `
+    `;
     makeupText.value = value || '';
     saveMakeupBtn.onclick = () => saveMakeup(type, customerId, makeupText.value);
 
     makeupModal.classList.remove('hidden');
-}
+    makeupModal.showModal();
+};
 
 const saveMakeup = async (type, customerId, value) => {
 
@@ -557,3 +554,14 @@ const saveMakeup = async (type, customerId, value) => {
         location.reload();   // 새로고침
     }
 };
+
+// 닫기 버튼 이벤트 추가
+const closeMakeupModal = () => {
+    const makeupModal = document.getElementById('makeupModal');
+    makeupModal.close(); // 모달 닫기
+    resetModal();
+    makeupModal.classList.add('hidden'); // 다시 숨기기
+};
+
+// 닫기 버튼 클릭 이벤트 추가
+document.getElementById('closeMakeupBtn').addEventListener('click', closeMakeupModal);

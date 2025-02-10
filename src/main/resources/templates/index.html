@@ -10,6 +10,11 @@
         .font-custom {
             font-family: 'Inter', sans-serif;
         }
+
+        html, body {
+            overflow: hidden; /* 전체 페이지 스크롤 제거 */
+            height: 100%; /* 전체 페이지 높이를 꽉 채움 */
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-700 font-custom h-screen">
@@ -74,10 +79,10 @@
             </div>
 
             <!-- Table -->
-            <div>
-                <table class="bg-white table-card w-full border-slate-200 h-full">
-                    <thead class="sticky top-0">
-                    <tr class="text-xs text-slate-600 bg-slate-200 shadow-inner">
+            <div class="max-h-[80vh] overflow-y-auto border border-slate-300 rounded-md shadow-md">
+                <table class="bg-white table-card w-full border-slate-200">
+                    <thead class="sticky top-0 bg-slate-200 shadow-inner z-10">
+                    <tr class="text-xs text-slate-600">
                         <th class="py-3 whitespace-nowrap">고객명</th>
                         <th class="py-3 whitespace-nowrap">드레스 투어</th>
                         <th class="py-3 whitespace-nowrap">촬영 가봉</th>
@@ -88,7 +93,7 @@
                         <th class="py-3 whitespace-nowrap">W</th>
                     </tr>
                     </thead>
-                    <tbody id="calendarList" class="text-xs">
+                    <tbody id="calendarList" class="text-xs relative">
                     </tbody>
                 </table>
             </div>
@@ -193,28 +198,24 @@
     </div>
 </dialog>
 
-<!-- 모달 백그라운드 -->
-<dialog id="makeupModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div>
-        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 id="makeupTitle" class="text-lg font-bold mb-4 text-center">
-            </h2>
+<dialog id="makeupModal" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 id="makeupTitle" class="text-lg font-bold mb-4 text-center"></h2>
 
-            <label for="makeupText">
-                <textarea id="makeupText" class="w-full h-80 p-2 border rounded-md bg-gray-100 resize-none text-left align-top" disabled></textarea>
-            </label>
+        <label for="makeupText">
+            <textarea id="makeupText" class="w-full h-80 p-2 border rounded-md bg-gray-100 resize-none text-left align-top" placeholder="텍스트를 입력해주세요." disabled></textarea>
+        </label>
 
-            <div class="modal-action flex justify-end gap-2 mt-4">
-                <button id="saveMakeupBtn" class="hidden bg-green-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
-                    저장
-                </button>
-                <button id="editMakeupBtn" class="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
-                    수정
-                </button>
-                <button class="close py-1 px-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-normal border border-gray-300 text-sm">
-                    닫기
-                </button>
-            </div>
+        <div class="modal-action flex justify-end gap-2 mt-4">
+            <button id="saveMakeupBtn" class="hidden bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
+                저장
+            </button>
+            <button id="editMakeupBtn" class="bg-slate-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 font-normal text-sm">
+                수정
+            </button>
+            <button id="closeMakeupBtn" class="py-1 px-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-normal border border-gray-300 text-sm">
+                닫기
+            </button>
         </div>
     </div>
 </dialog>
