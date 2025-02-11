@@ -194,7 +194,6 @@ const fetchCustomerList = async () => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        console.log('data :', data.data);
         createCalendar(data.data);
         createGuideList(data.data);
 
@@ -248,7 +247,7 @@ const createTdColumns = (customer) => {
     const events = customer.events;
     const eventTypes = ['드레스 투어', '촬영 가봉', '리허설 촬영', '본식 가봉', '본식'];
     let tdHtml = '';
-    console.log('events :', events);
+
     for (let type of eventTypes) {
 
         const targetEvent = events.find(event => event.eventType === type);

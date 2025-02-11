@@ -70,8 +70,6 @@ public class WeddingRestController {
     @PostMapping("/makeup")
     public ResponseEntity<?> saveMakeup(@RequestBody MakeupRequestDto requestDto) {
 
-        System.out.println("requestDto :" + requestDto);
-
         Customer customer = customerRepository.findById(requestDto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + requestDto.getCustomerId()));
 
